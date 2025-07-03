@@ -58,11 +58,12 @@ export default {
 					foreground: 'hsl(var(--card-foreground))'
 				},
 				moonscape: {
+					ivory: 'hsl(var(--moonscape-ivory))',
 					charcoal: 'hsl(var(--moonscape-charcoal))',
 					platinum: 'hsl(var(--moonscape-platinum))',
-					ivory: 'hsl(var(--moonscape-ivory))',
 					blue: 'hsl(var(--moonscape-blue))',
-					glow: 'hsl(var(--moonscape-glow))',
+					gold: 'hsl(var(--moonscape-gold))',
+					'light-gray': 'hsl(var(--moonscape-light-gray))',
 				}
 			},
 			borderRadius: {
