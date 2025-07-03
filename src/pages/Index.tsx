@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -12,10 +11,21 @@ import FAQ from '@/components/FAQ';
 const Index = () => {
   const [scrollY, setScrollY] = useState(0);
   const [selectedFilter, setSelectedFilter] = useState('All');
+  const [currentHeroImage, setCurrentHeroImage] = useState(0);
+
+  const heroImages = [
+    '/lovable-uploads/498a41a4-2b3b-46d3-ad3e-17a2eed7f05c.png',
+    '/lovable-uploads/0d41c9e9-6144-4da8-88fd-55d452bb9bfa.png'
+  ];
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll);
+    
+    // Image rotation for hero
+    const imageInterval = setInterval(() => {
+      setCurrentHeroImage((prev) => (prev + 1) % heroImages.length);
+    }, 8000);
     
     // Intersection Observer for reveal animations
     const observer = new IntersectionObserver(
@@ -37,6 +47,7 @@ const Index = () => {
     
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      clearInterval(imageInterval);
       observer.disconnect();
     };
   }, []);
@@ -77,16 +88,16 @@ const Index = () => {
     <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
       <header className="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-lg border-b border-border luxury-shadow transition-all duration-300">
-        <div className="container mx-auto container-padding py-4 flex items-center justify-between">
-          <div className="font-serif text-3xl font-bold text-primary">
+        <div className="container mx-auto container-padding py-3 sm:py-4 flex items-center justify-between">
+          <div className="font-serif text-2xl sm:text-3xl font-bold text-primary">
             Moonscape
           </div>
-          <nav className="hidden md:flex space-x-8">
+          <nav className="hidden md:flex space-x-6 lg:space-x-8">
             {['Properties', 'About', 'Featured', 'Dubai', 'Contact'].map((item) => (
               <button 
                 key={item}
                 onClick={() => scrollToSection(item.toLowerCase().replace(' ', '-'))}
-                className="hover:text-primary transition-colors duration-300 font-medium relative group"
+                className="hover:text-primary transition-colors duration-300 font-medium relative group text-sm lg:text-base"
               >
                 {item}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
@@ -98,58 +109,69 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center scale-105"
-          style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1920&h=1080&fit=crop&q=80)',
-            transform: `translateY(${scrollY * 0.3}px) scale(1.05)`,
-          }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/60"></div>
+        <div className="absolute inset-0">
+          {heroImages.map((image, index) => (
+            <div
+              key={image}
+              className={`absolute inset-0 transition-opacity duration-2000 ${
+                index === currentHeroImage ? 'opacity-100' : 'opacity-0'
+              }`}
+              style={{
+                transform: `translateY(${scrollY * 0.3}px)`,
+              }}
+            >
+              <img 
+                src={image}
+                alt={`Moonscape Dubai cityscape ${index + 1}`}
+                className="hero-image scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/30 to-black/50"></div>
+            </div>
+          ))}
         </div>
         
-        <div className="text-center z-10 container-padding max-w-5xl animate-fade-in-up">
-          <h1 className="font-serif font-bold mb-8 text-white leading-[0.9] text-balance drop-shadow-lg">
+        <div className="text-center z-10 container-padding max-w-6xl animate-fade-in-up">
+          <h1 className="font-serif font-bold mb-6 sm:mb-8 text-white leading-[0.9] text-balance drop-shadow-lg hero-title">
             Invest in Dubai's Most<br />Visionary Real Estate
           </h1>
-          <p className="text-xl md:text-2xl text-white/90 mb-12 font-light max-w-3xl mx-auto leading-relaxed">
+          <p className="hero-subtitle text-white/90 mb-8 sm:mb-12 font-light max-w-3xl mx-auto leading-relaxed">
             Elevated Living. Earthly Luxury.
           </p>
           
           <Button 
-            className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-10 py-6 text-lg luxury-shadow transition-all duration-300 hover:scale-105"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8 sm:px-10 py-4 sm:py-6 text-base sm:text-lg luxury-shadow transition-all duration-300 hover:scale-105"
             onClick={() => scrollToSection('properties')}
           >
             Discover Our Vision
           </Button>
         </div>
         
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <ArrowDown className="w-6 h-6 text-white/80" />
+        <div className="absolute bottom-6 sm:bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <ArrowDown className="w-5 h-5 sm:w-6 sm:h-6 text-white/80" />
         </div>
       </section>
 
       {/* Featured Properties */}
       <section id="properties" className="section-spacing bg-white">
         <div className="container mx-auto container-padding">
-          <div className="text-center mb-20 reveal">
-            <h2 className="font-serif font-bold mb-8 text-foreground text-balance">
+          <div className="text-center mb-16 sm:mb-20 reveal">
+            <h2 className="font-serif font-bold mb-6 sm:mb-8 text-foreground text-balance">
               Featured Properties
             </h2>
-            <p className="text-muted-foreground text-xl max-w-3xl mx-auto leading-relaxed">
+            <p className="text-muted-foreground text-lg sm:text-xl max-w-3xl mx-auto leading-relaxed">
               Discover our signature developments that redefine luxury living in Dubai's most prestigious locations
             </p>
           </div>
           
-          <div className="reveal">
+          <div className="reveal mb-12">
             <PropertyFilter onFilterChange={setSelectedFilter} />
           </div>
           
-          <div className="space-y-12">
+          <div className="space-y-8 sm:space-y-12">
             {filteredProperties.map((property, index) => (
               <Card key={index} className="overflow-hidden luxury-shadow hover:premium-shadow transition-all duration-500 bg-moonscape-charcoal reveal group">
                 <div className="grid lg:grid-cols-2 gap-0">
-                  <div className="relative h-80 lg:h-96 overflow-hidden order-2 lg:order-1">
+                  <div className="relative h-64 sm:h-80 lg:h-96 overflow-hidden order-2 lg:order-1">
                     <img 
                       src={`https://images.unsplash.com/${property.image}?w=800&h=600&fit=crop&q=80`}
                       alt={`${property.title} - Luxury property in ${property.area}`}
@@ -157,20 +179,20 @@ const Index = () => {
                       loading="lazy"
                     />
                   </div>
-                  <div className="p-12 lg:p-16 flex flex-col justify-center text-white order-1 lg:order-2">
-                    <h3 className="font-serif text-4xl font-bold mb-4 text-balance">{property.title}</h3>
-                    <p className="text-white/80 text-xl mb-8 font-medium">{property.area}</p>
+                  <div className="p-8 sm:p-12 lg:p-16 flex flex-col justify-center text-white order-1 lg:order-2">
+                    <h3 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 text-balance">{property.title}</h3>
+                    <p className="text-white/80 text-lg sm:text-xl mb-6 sm:mb-8 font-medium">{property.area}</p>
                     
-                    <div className="space-y-4 mb-10">
+                    <div className="space-y-3 sm:space-y-4 mb-8 sm:mb-10">
                       {property.usps.map((usp, uspIndex) => (
                         <div key={uspIndex} className="flex items-center">
-                          <CheckCircle className="w-5 h-5 text-moonscape-gold mr-4 flex-shrink-0" />
-                          <span className="text-white/90 text-lg">{usp}</span>
+                          <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-moonscape-gold mr-3 sm:mr-4 flex-shrink-0" />
+                          <span className="text-white/90 text-base sm:text-lg">{usp}</span>
                         </div>
                       ))}
                     </div>
                     
-                    <Button className="bg-moonscape-gold hover:bg-moonscape-gold/90 text-moonscape-charcoal font-semibold self-start px-8 py-4 text-lg transition-all duration-300 hover:scale-105">
+                    <Button className="bg-moonscape-gold hover:bg-moonscape-gold/90 text-moonscape-charcoal font-semibold self-start px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg transition-all duration-300 hover:scale-105">
                       Explore Property
                     </Button>
                   </div>
@@ -184,26 +206,26 @@ const Index = () => {
       {/* Featured Project */}
       <section id="featured-project" className="section-spacing premium-gradient">
         <div className="container mx-auto container-padding">
-          <div className="grid lg:grid-cols-2 gap-20 items-center">
+          <div className="grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-20 items-center">
             <div className="reveal">
-              <h2 className="font-serif font-bold mb-10 text-foreground text-balance">
+              <h2 className="font-serif font-bold mb-8 sm:mb-10 text-foreground text-balance">
                 Signature Collection:<br />Lunar Residences
               </h2>
-              <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
+              <p className="text-lg sm:text-xl text-muted-foreground mb-6 sm:mb-8 leading-relaxed">
                 Our flagship development represents the pinnacle of architectural innovation and luxury living. 
                 Located in the heart of Downtown Dubai, these residences offer unparalleled views and world-class amenities.
               </p>
-              <p className="text-xl text-muted-foreground mb-12 leading-relaxed">
+              <p className="text-lg sm:text-xl text-muted-foreground mb-10 sm:mb-12 leading-relaxed">
                 From private sky gardens to intelligent home systems, every detail has been meticulously crafted to exceed expectations 
                 and create a truly elevated living experience that defines the future of luxury residential development.
               </p>
-              <div className="flex flex-col sm:flex-row gap-6">
-                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8 py-4 text-lg flex items-center luxury-shadow transition-all duration-300 hover:scale-105">
-                  <Download className="w-5 h-5 mr-3" />
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg flex items-center justify-center luxury-shadow transition-all duration-300 hover:scale-105">
+                  <Download className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
                   Download Brochure
                 </Button>
-                <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground font-semibold px-8 py-4 text-lg flex items-center transition-all duration-300 hover:scale-105">
-                  <Phone className="w-5 h-5 mr-3" />
+                <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground font-semibold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg flex items-center justify-center transition-all duration-300 hover:scale-105">
+                  <Phone className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
                   Schedule a Call
                 </Button>
               </div>
@@ -223,7 +245,7 @@ const Index = () => {
       {/* About Moonscape */}
       <section id="about" className="section-spacing bg-white">
         <div className="container mx-auto container-padding">
-          <div className="grid lg:grid-cols-2 gap-20 items-center">
+          <div className="grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-20 items-center">
             <div className="relative reveal order-2 lg:order-1">
               <img 
                 src="https://images.unsplash.com/photo-1470813740244-df37b8c1edcb?w=800&h=600&fit=crop&q=80"
@@ -233,23 +255,23 @@ const Index = () => {
               />
             </div>
             <div className="order-1 lg:order-2 reveal">
-              <h2 className="font-serif font-bold mb-10 text-foreground text-balance">About Moonscape</h2>
-              <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
+              <h2 className="font-serif font-bold mb-8 sm:mb-10 text-foreground text-balance">About Moonscape</h2>
+              <p className="text-lg sm:text-xl text-muted-foreground mb-6 sm:mb-8 leading-relaxed">
                 Moonscape Real Estate represents the convergence of visionary architecture and sustainable development. 
                 We don't just create buildings; we craft elevated experiences that reflect Dubai's forward-thinking identity.
               </p>
-              <p className="text-xl text-muted-foreground mb-12 leading-relaxed">
+              <p className="text-lg sm:text-xl text-muted-foreground mb-10 sm:mb-12 leading-relaxed">
                 Founded with an unwavering commitment to excellence and innovation, we focus on creating properties that stand as 
                 monuments to architectural sophistication while providing unparalleled living experiences for discerning residents and investors.
               </p>
-              <div className="grid grid-cols-2 gap-12">
+              <div className="grid grid-cols-2 gap-8 sm:gap-12">
                 <div>
-                  <h4 className="font-serif text-4xl font-bold text-primary mb-3">2024</h4>
-                  <p className="text-muted-foreground text-lg">Founded with Vision</p>
+                  <h4 className="font-serif text-3xl sm:text-4xl font-bold text-primary mb-2 sm:mb-3">2024</h4>
+                  <p className="text-muted-foreground text-base sm:text-lg">Founded with Vision</p>
                 </div>
                 <div>
-                  <h4 className="font-serif text-4xl font-bold text-primary mb-3">Dubai</h4>
-                  <p className="text-muted-foreground text-lg">Global Gateway</p>
+                  <h4 className="font-serif text-3xl sm:text-4xl font-bold text-primary mb-2 sm:mb-3">Dubai</h4>
+                  <p className="text-muted-foreground text-base sm:text-lg">Global Gateway</p>
                 </div>
               </div>
             </div>
@@ -260,17 +282,17 @@ const Index = () => {
       {/* Why Dubai */}
       <section id="dubai" className="section-spacing premium-gradient">
         <div className="container mx-auto container-padding">
-          <div className="text-center mb-20 reveal">
-            <h2 className="font-serif font-bold mb-8 text-foreground text-balance">
+          <div className="text-center mb-16 sm:mb-20 reveal">
+            <h2 className="font-serif font-bold mb-6 sm:mb-8 text-foreground text-balance">
               Why Dubai – Where Vision Becomes Skyline
             </h2>
-            <p className="text-muted-foreground text-xl max-w-4xl mx-auto leading-relaxed">
+            <p className="text-muted-foreground text-lg sm:text-xl max-w-4xl mx-auto leading-relaxed">
               Dubai stands as the world's premier destination for luxury real estate investment, 
               offering unmatched opportunities for growth and lifestyle enhancement in a tax-free environment.
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {[
               { stat: "0%", label: "Income Tax", desc: "Complete tax-free investment returns and rental income" },
               { stat: "6-10%", label: "Rental Yields", desc: "Consistently strong annual returns across all property types" },
@@ -279,11 +301,11 @@ const Index = () => {
               { stat: "Stable", label: "Political Climate", desc: "Secure and transparent investment environment with strong governance" },
               { stat: "Visionary", label: "Urban Planning", desc: "Future-focused sustainable development and smart city initiatives" }
             ].map((item, index) => (
-              <Card key={index} className="bg-white p-8 text-center luxury-shadow hover:premium-shadow transition-all duration-300 reveal group hover:scale-105">
+              <Card key={index} className="bg-white p-6 sm:p-8 text-center luxury-shadow hover:premium-shadow transition-all duration-300 reveal group hover:scale-105">
                 <CardContent className="p-0">
-                  <h3 className="font-serif text-5xl font-bold text-primary mb-4 group-hover:text-moonscape-gold transition-colors duration-300">{item.stat}</h3>
-                  <h4 className="font-semibold text-foreground mb-3 text-lg">{item.label}</h4>
-                  <p className="text-muted-foreground leading-relaxed">{item.desc}</p>
+                  <h3 className="font-serif text-4xl sm:text-5xl font-bold text-primary mb-3 sm:mb-4 group-hover:text-moonscape-gold transition-colors duration-300">{item.stat}</h3>
+                  <h4 className="font-semibold text-foreground mb-2 sm:mb-3 text-base sm:text-lg">{item.label}</h4>
+                  <p className="text-muted-foreground leading-relaxed text-sm sm:text-base">{item.desc}</p>
                 </CardContent>
               </Card>
             ))}
@@ -297,36 +319,36 @@ const Index = () => {
       {/* Contact Section */}
       <section id="contact" className="section-spacing bg-white">
         <div className="container mx-auto container-padding max-w-5xl">
-          <div className="text-center mb-20 reveal">
-            <h2 className="font-serif font-bold mb-8 text-foreground text-balance">Let's Talk</h2>
-            <p className="text-muted-foreground text-xl max-w-3xl mx-auto leading-relaxed">
+          <div className="text-center mb-16 sm:mb-20 reveal">
+            <h2 className="font-serif font-bold mb-6 sm:mb-8 text-foreground text-balance">Let's Talk</h2>
+            <p className="text-muted-foreground text-lg sm:text-xl max-w-3xl mx-auto leading-relaxed">
               We'd love to hear from you. Begin your journey to elevated living with a private consultation 
               tailored to your investment goals and lifestyle aspirations.
             </p>
           </div>
           
           <Card className="bg-white luxury-shadow reveal">
-            <CardContent className="p-12">
-              <form className="space-y-8" role="form" aria-label="Contact form">
-                <div className="grid md:grid-cols-2 gap-8">
-                  <div className="space-y-3">
-                    <label htmlFor="name" className="text-foreground font-semibold text-lg">Full Name *</label>
+            <CardContent className="p-8 sm:p-12">
+              <form className="space-y-6 sm:space-y-8" role="form" aria-label="Contact form">
+                <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
+                  <div className="space-y-2 sm:space-y-3">
+                    <label htmlFor="name" className="text-foreground font-semibold text-base sm:text-lg">Full Name *</label>
                     <Input 
                       id="name"
                       name="name"
-                      className="border-border focus:border-primary text-lg py-4 transition-all duration-300"
+                      className="border-border focus:border-primary text-base sm:text-lg py-3 sm:py-4 transition-all duration-300"
                       placeholder="Enter your full name"
                       required
                       aria-required="true"
                     />
                   </div>
-                  <div className="space-y-3">
-                    <label htmlFor="email" className="text-foreground font-semibold text-lg">Email Address *</label>
+                  <div className="space-y-2 sm:space-y-3">
+                    <label htmlFor="email" className="text-foreground font-semibold text-base sm:text-lg">Email Address *</label>
                     <Input 
                       id="email"
                       name="email"
                       type="email"
-                      className="border-border focus:border-primary text-lg py-4 transition-all duration-300"
+                      className="border-border focus:border-primary text-base sm:text-lg py-3 sm:py-4 transition-all duration-300"
                       placeholder="your@email.com"
                       required
                       aria-required="true"
@@ -334,21 +356,21 @@ const Index = () => {
                   </div>
                 </div>
                 
-                <div className="grid md:grid-cols-2 gap-8">
-                  <div className="space-y-3">
-                    <label htmlFor="phone" className="text-foreground font-semibold text-lg">Phone Number</label>
+                <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
+                  <div className="space-y-2 sm:space-y-3">
+                    <label htmlFor="phone" className="text-foreground font-semibold text-base sm:text-lg">Phone Number</label>
                     <Input 
                       id="phone"
                       name="phone"
                       type="tel"
-                      className="border-border focus:border-primary text-lg py-4 transition-all duration-300"
+                      className="border-border focus:border-primary text-base sm:text-lg py-3 sm:py-4 transition-all duration-300"
                       placeholder="+971 XX XXX XXXX"
                     />
                   </div>
-                  <div className="space-y-3">
-                    <label htmlFor="property-type" className="text-foreground font-semibold text-lg">Property Interest</label>
+                  <div className="space-y-2 sm:space-y-3">
+                    <label htmlFor="property-type" className="text-foreground font-semibold text-base sm:text-lg">Property Interest</label>
                     <Select name="property-type" aria-label="Select property type">
-                      <SelectTrigger id="property-type" className="border-border text-lg py-4 transition-all duration-300">
+                      <SelectTrigger id="property-type" className="border-border text-base sm:text-lg py-3 sm:py-4 transition-all duration-300">
                         <SelectValue placeholder="Select property type" />
                       </SelectTrigger>
                       <SelectContent className="bg-white">
@@ -362,19 +384,19 @@ const Index = () => {
                   </div>
                 </div>
                 
-                <div className="space-y-3">
-                  <label htmlFor="message" className="text-foreground font-semibold text-lg">Message</label>
+                <div className="space-y-2 sm:space-y-3">
+                  <label htmlFor="message" className="text-foreground font-semibold text-base sm:text-lg">Message</label>
                   <Textarea 
                     id="message"
                     name="message"
-                    className="border-border focus:border-primary min-h-40 text-lg transition-all duration-300"
+                    className="border-border focus:border-primary min-h-32 sm:min-h-40 text-base sm:text-lg transition-all duration-300"
                     placeholder="Tell us about your vision for elevated living in Dubai..."
                   />
                 </div>
                 
                 <Button 
                   type="submit"
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-6 text-lg luxury-shadow transition-all duration-300 hover:scale-[1.02]"
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-4 sm:py-6 text-base sm:text-lg luxury-shadow transition-all duration-300 hover:scale-[1.02]"
                 >
                   Book Private Consultation
                 </Button>
@@ -385,49 +407,49 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="py-20 bg-moonscape-charcoal text-white">
+      <footer className="py-16 sm:py-20 bg-moonscape-charcoal text-white">
         <div className="container mx-auto container-padding">
-          <div className="grid md:grid-cols-4 gap-16 mb-16">
+          <div className="grid md:grid-cols-4 gap-12 sm:gap-16 mb-12 sm:mb-16">
             <div className="md:col-span-2">
-              <h3 className="font-serif text-4xl font-bold mb-6">Moonscape</h3>
-              <p className="text-white/80 text-xl mb-8 font-light max-w-md leading-relaxed">
+              <h3 className="font-serif text-3xl sm:text-4xl font-bold mb-4 sm:mb-6">Moonscape</h3>
+              <p className="text-white/80 text-lg sm:text-xl mb-6 sm:mb-8 font-light max-w-md leading-relaxed">
                 Elevated Living. Earthly Luxury.
               </p>
-              <p className="text-white/60 leading-relaxed max-w-lg text-lg">
+              <p className="text-white/60 leading-relaxed max-w-lg text-base sm:text-lg">
                 Pioneering visionary real estate development in Dubai, 
                 where architectural sophistication meets elevated living standards for the discerning global investor.
               </p>
             </div>
             
             <div>
-              <h4 className="font-semibold text-white mb-6 uppercase tracking-wider text-sm">PROPERTIES</h4>
-              <ul className="space-y-4 text-white/70">
+              <h4 className="font-semibold text-white mb-4 sm:mb-6 uppercase tracking-wider text-xs sm:text-sm">PROPERTIES</h4>
+              <ul className="space-y-3 sm:space-y-4 text-white/70">
                 {['Luxury Apartments', 'Signature Villas', 'Off-plan Projects', 'Investment Opportunities'].map((item) => (
                   <li key={item}>
-                    <a href="#" className="hover:text-white transition-colors duration-300 text-lg">{item}</a>
+                    <a href="#" className="hover:text-white transition-colors duration-300 text-base sm:text-lg">{item}</a>
                   </li>
                 ))}
               </ul>
             </div>
             
             <div>
-              <h4 className="font-semibold text-white mb-6 uppercase tracking-wider text-sm">COMPANY</h4>
-              <ul className="space-y-4 text-white/70">
+              <h4 className="font-semibold text-white mb-4 sm:mb-6 uppercase tracking-wider text-xs sm:text-sm">COMPANY</h4>
+              <ul className="space-y-3 sm:space-y-4 text-white/70">
                 {['About Us', 'Our Philosophy', 'Careers', 'Contact'].map((item) => (
                   <li key={item}>
-                    <a href="#" className="hover:text-white transition-colors duration-300 text-lg">{item}</a>
+                    <a href="#" className="hover:text-white transition-colors duration-300 text-base sm:text-lg">{item}</a>
                   </li>
                 ))}
               </ul>
             </div>
           </div>
           
-          <div className="flex flex-col md:flex-row justify-between items-center pt-12 border-t border-white/20">
-            <p className="text-white/60 mb-6 md:mb-0 text-lg">
+          <div className="flex flex-col md:flex-row justify-between items-center pt-8 sm:pt-12 border-t border-white/20">
+            <p className="text-white/60 mb-4 sm:mb-6 md:mb-0 text-base sm:text-lg text-center md:text-left">
               © 2024 Moonscape Real Estate LLC. All rights reserved.
             </p>
             
-            <div className="flex space-x-8">
+            <div className="flex space-x-6 sm:space-x-8">
               {[
                 { icon: Instagram, href: "https://www.instagram.com/moonscape_dubai", label: "Instagram" },
                 { icon: Linkedin, href: "https://www.linkedin.com/company/moonscape-realestate", label: "LinkedIn" },
@@ -440,7 +462,7 @@ const Index = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <social.icon className="w-7 h-7" />
+                  <social.icon className="w-6 h-6 sm:w-7 sm:h-7" />
                 </a>
               ))}
             </div>
