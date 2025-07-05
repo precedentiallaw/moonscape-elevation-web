@@ -87,17 +87,16 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Hero Section */}
+      {/* Hero */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden bg-slate-900">
         <div className="absolute inset-0">
           <img
             src="https://images.unsplash.com/photo-1552350005-84f8c2e2f59d?fit=crop&w=1600&q=80"
-            alt="Dubai skyline at dusk"
+            alt="Dubai skyline"
             className="w-full h-full object-cover object-center"
           />
-          <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-[1px]" />
+          <div className="absolute inset-0 bg-slate-900/40" />
         </div>
-
         <div className="z-10 text-center px-6 max-w-4xl">
           <h1 className="text-5xl md:text-6xl font-light text-white mb-6 leading-tight tracking-tighter">
             Experience Elevated<br />Living in Dubai
@@ -107,14 +106,14 @@ const Index = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button
-              className="bg-white text-slate-900 hover:bg-slate-100 font-medium px-8 py-3 text-sm tracking-wide transition-shadow hover:shadow-md"
+              className="bg-white text-slate-900 hover:bg-slate-100 font-medium px-8 py-3 text-sm tracking-wide"
               onClick={() => scrollToSection('properties')}
             >
               Explore Properties
             </Button>
             <Button
               variant="outline"
-              className="border-white/30 text-white hover:bg-white hover:text-slate-900 px-8 py-3 text-sm tracking-wide backdrop-blur-sm transition-all"
+              className="border-white/30 text-white hover:bg-white hover:text-slate-900 px-8 py-3 text-sm tracking-wide backdrop-blur-sm"
               onClick={() => scrollToSection('contact')}
             >
               <Phone className="w-4 h-4 mr-2" />
@@ -122,7 +121,6 @@ const Index = () => {
             </Button>
           </div>
         </div>
-
         <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 animate-bounce">
           <ArrowDown className="w-5 h-5 text-white/70" />
         </div>
@@ -132,11 +130,11 @@ const Index = () => {
       <section id="dubai" className="py-24 bg-white">
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="text-center mb-16 reveal">
-            <h2 className="text-4xl md:text-5xl font-light mb-6 text-slate-900 tracking-tight leading-tight">
+            <h2 className="text-4xl md:text-5xl font-light mb-6 text-slate-900 tracking-tight">
               Why Dubai
             </h2>
             <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed font-light">
-              A global destination offering unmatched investment returns<br className="hidden md:block" />
+              A global destination offering unmatched investment returns
               and lifestyle opportunities
             </p>
           </div>
@@ -149,32 +147,21 @@ const Index = () => {
               { stat: '', suffix: '', label: 'Economy', desc: 'Robust foundation with continuous growth' },
               { stat: 200, suffix: '+', label: 'Nationalities', desc: 'Truly international business environment' },
               { stat: 2030, suffix: '', label: 'Vision', desc: 'Ambitious development goals and infrastructure' },
-            ].map((item, index) => {
-              const isNumeric = typeof item.stat === 'number' && item.stat !== '';
-              const count = isNumeric ? useCountUp(item.stat as number) : null;
-
-              return (
-                <div
-                  key={index}
-                  className="reveal bg-white border border-slate-200 hover:border-slate-300 transition-all duration-300 shadow-sm hover:shadow-md p-8 text-center rounded-lg"
-                >
-                  <h3 className="text-4xl font-light text-slate-900 mb-2 tracking-tight">
-                    {isNumeric ? `${count}${item.suffix}` : item.label}
-                  </h3>
-                  {isNumeric && (
-                    <h4 className="text-sm text-slate-700 font-medium mb-3 uppercase tracking-wide">
-                      {item.label}
-                    </h4>
-                  )}
-                  <p className="text-slate-600 text-sm leading-relaxed">{item.desc}</p>
-                </div>
-              );
-            })}
+            ].map((item, index) => (
+              <StatCard
+                key={index}
+                isNumeric={typeof item.stat === 'number' && item.stat !== ''}
+                stat={item.stat}
+                suffix={item.suffix}
+                label={item.label}
+                desc={item.desc}
+              />
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Contact Section */}
+      {/* Contact */}
       <section id="contact" className="py-24 bg-slate-50/50">
         <div className="container mx-auto px-6 max-w-4xl">
           <div className="text-center mb-16 reveal">
@@ -232,6 +219,37 @@ const Index = () => {
           )}
         </div>
       </section>
+    </div>
+  );
+};
+
+// ✅ Local component to safely use hooks
+const StatCard = ({
+  isNumeric,
+  stat,
+  suffix,
+  label,
+  desc,
+}: {
+  isNumeric: boolean;
+  stat: number | string;
+  suffix: string;
+  label: string;
+  desc: string;
+}) => {
+  const count = isNumeric ? useCountUp(stat as number) : null;
+
+  return (
+    <div className="reveal bg-white border border-slate-200 hover:border-slate-300 transition-all duration-300 shadow-sm hover:shadow-md p-8 text-center rounded-lg">
+      <h3 className="text-4xl font-light text-slate-900 mb-2 tracking-tight">
+        {isNumeric ? `${count}${suffix}` : label}
+      </h3>
+      {isNumeric && (
+        <h4 className="text-sm text-slate-700 font-medium mb-3 uppercase tracking-wide">
+          {label}
+        </h4>
+      )}
+      <p className="text-slate-600 text-sm leading-relaxed">{desc}</p>
     </div>
   );
 };
