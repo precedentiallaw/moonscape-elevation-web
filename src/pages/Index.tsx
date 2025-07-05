@@ -2,10 +2,6 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Menu, X } from "lucide-react"; // if not already imported
-
-const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
 import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
@@ -25,11 +21,13 @@ import {
   TrendingUp,
   CheckCircle,
   Menu,
+  X,
 } from "lucide-react";
 
 const Index = () => {
   const [scrollY, setScrollY] = useState(0);
   const [lang, setLang] = useState<"en" | "ar">("en");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -46,7 +44,10 @@ const Index = () => {
       { threshold: 0.1 }
     );
 
-    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+    document.querySelectorAll(".reveal").forEach((el) =>
+      observer.observe(el)
+    );
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
       observer.disconnect();
@@ -68,9 +69,6 @@ const Index = () => {
     { label: t("Dubai", "لماذا دبي"), id: "dubai" },
     { label: t("Contact", "اتصل بنا"), id: "contact" },
   ];
-
-  return (
-    <div className={`min-h-screen ${lang === "ar" ? "rtl text-right" : ""}`}>
       {/* Header */}
      <header className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur border-b border-slate-200">
   <div className="container mx-auto px-6 py-4 flex items-center justify-between max-w-7xl">
