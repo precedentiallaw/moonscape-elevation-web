@@ -21,7 +21,6 @@ import {
   TrendingUp,
   CheckCircle,
 } from 'lucide-react';
-import useCountUp from '@/hooks/useCountUp';
 
 const Index = () => {
   const [scrollY, setScrollY] = useState(0);
@@ -141,21 +140,14 @@ const Index = () => {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12">
             {[
-              { stat: 0, suffix: '%', label: 'Capital Gains Tax', desc: 'Tax-free environment for property investments' },
-              { stat: 6, suffix: '–10%', label: 'Annual Yields', desc: 'Strong rental returns across prime locations' },
-              { stat: '', suffix: '', label: 'Connectivity', desc: 'Strategic location connecting major markets' },
-              { stat: '', suffix: '', label: 'Economy', desc: 'Robust foundation with continuous growth' },
-              { stat: 200, suffix: '+', label: 'Nationalities', desc: 'Truly international business environment' },
-              { stat: 2030, suffix: '', label: 'Vision', desc: 'Ambitious development goals and infrastructure' },
+              { stat: '0%', label: 'Capital Gains Tax', desc: 'Tax-free environment for property investments' },
+              { stat: '6–10%', label: 'Annual Yields', desc: 'Strong rental returns across prime locations' },
+              { stat: 'Global', label: 'Connectivity', desc: 'Strategic location connecting major markets' },
+              { stat: 'Stable', label: 'Economy', desc: 'Robust foundation with continuous growth' },
+              { stat: '200+', label: 'Nationalities', desc: 'Truly international business environment' },
+              { stat: '2030', label: 'Vision', desc: 'Ambitious development goals and infrastructure' },
             ].map((item, index) => (
-              <StatCard
-                key={index}
-                isNumeric={typeof item.stat === 'number' && item.stat !== ''}
-                stat={item.stat}
-                suffix={item.suffix}
-                label={item.label}
-                desc={item.desc}
-              />
+              <StatCard key={index} stat={item.stat} label={item.label} desc={item.desc} />
             ))}
           </div>
         </div>
@@ -223,33 +215,25 @@ const Index = () => {
   );
 };
 
-// ✅ Local component to safely use hooks
+// ✅ Animated stat card (CSS-only reveal)
 const StatCard = ({
-  isNumeric,
   stat,
-  suffix,
   label,
   desc,
 }: {
-  isNumeric: boolean;
-  stat: number | string;
-  suffix: string;
+  stat: string;
   label: string;
   desc: string;
 }) => {
-  const count = isNumeric ? useCountUp(stat as number) : null;
-
   return (
-    <div className="reveal bg-white border border-slate-200 hover:border-slate-300 transition-all duration-300 shadow-sm hover:shadow-md p-8 text-center rounded-lg">
-      <h3 className="text-4xl font-light text-slate-900 mb-2 tracking-tight">
-        {isNumeric ? `${count}${suffix}` : label}
-      </h3>
-      {isNumeric && (
+    <div className="reveal transform transition-all duration-700 opacity-0 translate-y-6">
+      <div className="bg-white border border-slate-200 hover:border-slate-300 shadow-sm hover:shadow-md p-8 text-center rounded-lg transition">
+        <h3 className="text-4xl font-light text-slate-900 mb-2 tracking-tight">{stat}</h3>
         <h4 className="text-sm text-slate-700 font-medium mb-3 uppercase tracking-wide">
           {label}
         </h4>
-      )}
-      <p className="text-slate-600 text-sm leading-relaxed">{desc}</p>
+        <p className="text-slate-600 text-sm leading-relaxed">{desc}</p>
+      </div>
     </div>
   );
 };
