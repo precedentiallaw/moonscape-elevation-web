@@ -1,20 +1,60 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  ArrowDown,
+  Phone,
+  Instagram,
+  Linkedin,
+  Star,
+  Shield,
+  Award,
+  TrendingUp,
+  CheckCircle,
+  Menu,
+} from "lucide-react";
 
 const Index = () => {
   const [scrollY, setScrollY] = useState(0);
   const [lang, setLang] = useState<"en" | "ar">("en");
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false); // ✅ Now inside the component
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener("scroll", handleScroll);
 
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("active");
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      observer.disconnect();
     };
   }, []);
+
+  const scrollToSection = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
 
   const t = (en: string, ar: string) => (lang === "ar" ? ar : en);
 
@@ -25,11 +65,6 @@ const Index = () => {
     { label: t("Contact", "اتصل بنا"), id: "contact" },
   ];
 
-  const scrollToSection = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-    setMobileMenuOpen(false); // auto-close menu on click
-  };
-
   return (
     <div className={`min-h-screen ${lang === "ar" ? "rtl text-right" : ""}`}>
       {/* Header */}
@@ -38,21 +73,17 @@ const Index = () => {
           <div className="text-xl font-semibold text-slate-900 tracking-tight fade-in">
             Moonscape
           </div>
-
-          {/* Desktop Nav */}
           <nav className="hidden md:flex space-x-6">
             {navItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className="text-slate-700 hover:text-slate-900 text-sm font-medium transition-colors"
+                className="text-slate-700 hover:text-slate-900 text-sm font-medium"
               >
                 {item.label}
               </button>
             ))}
           </nav>
-
-          {/* Language + Mobile Button */}
           <div className="flex items-center gap-2">
             <Button
               variant="ghost"
@@ -61,37 +92,13 @@ const Index = () => {
             >
               {lang === "en" ? "العربية" : "EN"}
             </Button>
-
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden text-slate-900"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Toggle Menu"
-            >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            <Button className="md:hidden bg-slate-900 text-white">
+              <Menu className="w-4 h-4" />
             </Button>
           </div>
         </div>
-
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden bg-white border-t border-slate-200 shadow-md transition-all duration-300">
-            <nav className="flex flex-col px-6 py-4 space-y-4">
-              {navItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => scrollToSection(item.id)}
-                  className="text-slate-700 hover:text-slate-900 text-base font-medium"
-                >
-                  {item.label}
-                </button>
-              ))}
-            </nav>
-          </div>
-        )}
       </header>
-      
+
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <video
@@ -386,6 +393,7 @@ const Index = () => {
           </Card>
         </div>
       </section>
+
       {/* Footer */}
       <footer className="py-20 bg-slate-900 text-white">
         <div className="container mx-auto px-6 max-w-7xl">
@@ -393,106 +401,49 @@ const Index = () => {
             <div className="md:col-span-2">
               <h3 className="text-2xl font-light mb-6 tracking-tight">Moonscape</h3>
               <p className="text-white/80 mb-8 leading-relaxed text-sm">
-                {t(
-                  "Your gateway to Dubai's most prestigious properties and investment opportunities.",
-                  "بوابتك إلى أكثر العقارات والمشاريع الاستثمارية تميزًا في دبي."
-                )}
+                {t("Your gateway to Dubai's most prestigious properties and investment opportunities.", "بوابتك إلى أرقى العقارات وفرص الاستثمار في دبي.")}
               </p>
               <div className="flex space-x-4">
                 {[
                   { icon: Instagram, href: "#", label: "Instagram" },
                   { icon: Linkedin, href: "#", label: "LinkedIn" },
                 ].map((social) => (
-                  <a
-                    key={social.label}
-                    href={social.href}
-                    className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 transition-colors"
-                    aria-label={social.label}
-                  >
+                  <a key={social.label} href={social.href} className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 transition-colors">
                     <social.icon className="w-4 h-4" />
                   </a>
                 ))}
               </div>
             </div>
-
             <div>
-              <h4 className="font-medium text-white mb-6 text-sm tracking-wide">
-                {t("Properties", "العقارات")}
-              </h4>
+              <h4 className="font-medium text-white mb-6 text-sm tracking-wide">{t("Properties", "العقارات")}</h4>
               <ul className="space-y-3 text-white/70 text-sm">
-                {[
-                  t("Apartments", "شقق"),
-                  t("Villas", "فلل"),
-                  t("Penthouses", "بنتهاوس"),
-                  t("Commercial", "تجاري"),
-                  t("Off-Plan", "مشاريع قيد الإنشاء"),
-                  t("Investment", "استثمار"),
-                ].map((item) => (
+                {["Apartments", "Villas", "Penthouses", "Commercial", "Off-Plan", "Investment"].map((item) => (
                   <li key={item}>
-                    <a href="#" className="hover:text-white transition-colors">
-                      {item}
-                    </a>
+                    <a href="#" className="hover:text-white transition-colors">{t(item, "—")}</a>
                   </li>
                 ))}
               </ul>
             </div>
-
             <div>
-              <h4 className="font-medium text-white mb-6 text-sm tracking-wide">
-                {t("Company", "الشركة")}
-              </h4>
+              <h4 className="font-medium text-white mb-6 text-sm tracking-wide">{t("Company", "الشركة")}</h4>
               <ul className="space-y-3 text-white/70 text-sm">
-                {[
-                  t("About Us", "من نحن"),
-                  t("Our Team", "فريقنا"),
-                  t("Careers", "الوظائف"),
-                  t("News", "الأخبار"),
-                  t("Contact", "اتصل بنا"),
-                  t("Legal", "الشؤون القانونية"),
-                ].map((item) => (
+                {["About Us", "Our Team", "Careers", "News", "Contact", "Legal"].map((item) => (
                   <li key={item}>
-                    <a href="#" className="hover:text-white transition-colors">
-                      {item}
-                    </a>
+                    <a href="#" className="hover:text-white transition-colors">{t(item, "—")}</a>
                   </li>
                 ))}
               </ul>
             </div>
           </div>
-
           <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/20">
             <div className="mb-4 md:mb-0 text-sm text-white/60">
-              <p>
-                © 2024 Moonscape Real Estate.{" "}
-                {t("All rights reserved.", "جميع الحقوق محفوظة.")}
-              </p>
-              <p className="text-xs text-white/50">
-                {t(
-                  "RERA Licensed | Dubai, United Arab Emirates",
-                  "مرخص من RERA | دبي، الإمارات العربية المتحدة"
-                )}
-              </p>
+              <p>© 2024 Moonscape Real Estate. {t("All rights reserved.", "جميع الحقوق محفوظة.")}</p>
+              <p className="text-xs text-white/50">{t("RERA Licensed | Dubai, United Arab Emirates", "مرخص من RERA | دبي، الإمارات العربية المتحدة")}</p>
             </div>
-
             <div className="flex gap-8 text-sm">
-              <a
-                href="#"
-                className="text-white/60 hover:text-white transition-colors"
-              >
-                {t("Privacy", "الخصوصية")}
-              </a>
-              <a
-                href="#"
-                className="text-white/60 hover:text-white transition-colors"
-              >
-                {t("Terms", "الشروط")}
-              </a>
-              <a
-                href="#"
-                className="text-white/60 hover:text-white transition-colors"
-              >
-                {t("Cookies", "ملفات تعريف الارتباط")}
-              </a>
+              {["Privacy", "Terms", "Cookies"].map((link) => (
+                <a key={link} href="#" className="text-white/60 hover:text-white transition-colors">{t(link, "—")}</a>
+              ))}
             </div>
           </div>
         </div>
