@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -86,7 +86,7 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Hero */}
+      {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden bg-slate-900">
         <div className="absolute inset-0">
           <img
@@ -133,8 +133,7 @@ const Index = () => {
               Why Dubai
             </h2>
             <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed font-light">
-              A global destination offering unmatched investment returns
-              and lifestyle opportunities
+              A global destination offering unmatched investment returns and lifestyle opportunities
             </p>
           </div>
 
@@ -147,13 +146,19 @@ const Index = () => {
               { stat: '200+', label: 'Nationalities', desc: 'Truly international business environment' },
               { stat: '2030', label: 'Vision', desc: 'Ambitious development goals and infrastructure' },
             ].map((item, index) => (
-              <StatCard key={index} stat={item.stat} label={item.label} desc={item.desc} />
+              <StatCard
+                key={index}
+                stat={item.stat}
+                label={item.label}
+                desc={item.desc}
+                delay={(index + 1) * 100}
+              />
             ))}
           </div>
         </div>
       </section>
 
-      {/* Contact */}
+      {/* Contact Section */}
       <section id="contact" className="py-24 bg-slate-50/50">
         <div className="container mx-auto px-6 max-w-4xl">
           <div className="text-center mb-16 reveal">
@@ -215,25 +220,25 @@ const Index = () => {
   );
 };
 
-// ✅ Animated stat card (CSS-only reveal)
+// ✨ Animated StatCard Component with Delay
 const StatCard = ({
   stat,
   label,
   desc,
+  delay = 0,
 }: {
   stat: string;
   label: string;
   desc: string;
+  delay?: number;
 }) => {
   return (
-    <div className="reveal transform transition-all duration-700 opacity-0 translate-y-6">
-      <div className="bg-white border border-slate-200 hover:border-slate-300 shadow-sm hover:shadow-md p-8 text-center rounded-lg transition">
-        <h3 className="text-4xl font-light text-slate-900 mb-2 tracking-tight">{stat}</h3>
-        <h4 className="text-sm text-slate-700 font-medium mb-3 uppercase tracking-wide">
-          {label}
-        </h4>
-        <p className="text-slate-600 text-sm leading-relaxed">{desc}</p>
-      </div>
+    <div className={`reveal delay-${delay} bg-white border border-slate-200 hover:border-slate-300 shadow-sm hover:shadow-md p-8 text-center rounded-lg`}>
+      <h3 className="text-4xl font-light text-slate-900 mb-2 tracking-tight">{stat}</h3>
+      <h4 className="text-sm text-slate-700 font-medium mb-3 uppercase tracking-wide">
+        {label}
+      </h4>
+      <p className="text-slate-600 text-sm leading-relaxed">{desc}</p>
     </div>
   );
 };
