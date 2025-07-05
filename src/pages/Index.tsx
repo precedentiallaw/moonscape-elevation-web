@@ -1,65 +1,20 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  ArrowDown,
-  Phone,
-  Instagram,
-  Linkedin,
-  Star,
-  Shield,
-  Award,
-  TrendingUp,
-  CheckCircle,
-  Menu,
-  X,
-} from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 const Index = () => {
   const [scrollY, setScrollY] = useState(0);
   const [lang, setLang] = useState<"en" | "ar">("en");
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false); // ✅ Now inside the component
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener("scroll", handleScroll);
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("active");
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    document.querySelectorAll(".reveal").forEach((el) =>
-      observer.observe(el)
-    );
-
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      observer.disconnect();
     };
   }, []);
-
-  const scrollToSection = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-  };
 
   const t = (en: string, ar: string) => (lang === "ar" ? ar : en);
 
@@ -69,70 +24,74 @@ const Index = () => {
     { label: t("Dubai", "لماذا دبي"), id: "dubai" },
     { label: t("Contact", "اتصل بنا"), id: "contact" },
   ];
+
+  const scrollToSection = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setMobileMenuOpen(false); // auto-close menu on click
+  };
+
+  return (
+    <div className={`min-h-screen ${lang === "ar" ? "rtl text-right" : ""}`}>
       {/* Header */}
-     <header className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur border-b border-slate-200">
-  <div className="container mx-auto px-6 py-4 flex items-center justify-between max-w-7xl">
-    {/* Logo */}
-    <div className="text-xl font-semibold text-slate-900 tracking-tight fade-in">
-      Moonscape
-    </div>
+      <header className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur border-b border-slate-200">
+        <div className="container mx-auto px-6 py-4 flex items-center justify-between max-w-7xl">
+          <div className="text-xl font-semibold text-slate-900 tracking-tight fade-in">
+            Moonscape
+          </div>
 
-    {/* Desktop Navigation */}
-    <nav className="hidden md:flex space-x-6">
-      {navItems.map((item) => (
-        <button
-          key={item.id}
-          onClick={() => scrollToSection(item.id)}
-          className="text-slate-700 hover:text-slate-900 text-sm font-medium transition-colors"
-        >
-          {item.label}
-        </button>
-      ))}
-    </nav>
+          {/* Desktop Nav */}
+          <nav className="hidden md:flex space-x-6">
+            {navItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => scrollToSection(item.id)}
+                className="text-slate-700 hover:text-slate-900 text-sm font-medium transition-colors"
+              >
+                {item.label}
+              </button>
+            ))}
+          </nav>
 
-    {/* Language + Mobile Toggle */}
-    <div className="flex items-center gap-2">
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => setLang(lang === "en" ? "ar" : "en")}
-      >
-        {lang === "en" ? "العربية" : "EN"}
-      </Button>
+          {/* Language + Mobile Button */}
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setLang(lang === "en" ? "ar" : "en")}
+            >
+              {lang === "en" ? "العربية" : "EN"}
+            </Button>
 
-      <Button
-        variant="ghost"
-        size="icon"
-        className="md:hidden text-slate-900"
-        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        aria-label="Toggle Menu"
-      >
-        {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-      </Button>
-    </div>
-  </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden text-slate-900"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle Menu"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </Button>
+          </div>
+        </div>
 
-  {/* Mobile Nav Panel */}
-  {mobileMenuOpen && (
-    <div className="md:hidden bg-white border-t border-slate-200 shadow-md transition-all duration-300">
-      <nav className="flex flex-col px-6 py-4 space-y-4">
-        {navItems.map((item) => (
-          <button
-            key={item.id}
-            onClick={() => {
-              scrollToSection(item.id);
-              setMobileMenuOpen(false);
-            }}
-            className="text-slate-700 text-base font-medium text-left"
-          >
-            {item.label}
-          </button>
-        ))}
-      </nav>
-    </div>
-  )}
-</header>
-
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-white border-t border-slate-200 shadow-md transition-all duration-300">
+            <nav className="flex flex-col px-6 py-4 space-y-4">
+              {navItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => scrollToSection(item.id)}
+                  className="text-slate-700 hover:text-slate-900 text-base font-medium"
+                >
+                  {item.label}
+                </button>
+              ))}
+            </nav>
+          </div>
+        )}
+      </header>
+      
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <video
