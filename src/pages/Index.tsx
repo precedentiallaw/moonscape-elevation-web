@@ -50,23 +50,23 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-white text-slate-900">
       {/* Header */}
-      <header className="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-sm border-b border-slate-200">
-        <div className="container mx-auto px-6 py-4 flex items-center justify-between max-w-6xl">
-          <div className="text-xl font-semibold text-slate-900">
+      <header className="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-sm border-b border-slate-100">
+        <div className="container mx-auto px-6 py-4 flex items-center justify-between max-w-7xl">
+          <div className="text-xl font-medium text-slate-900 tracking-tight">
             Moonscape
           </div>
-          <nav className="hidden md:flex space-x-8">
+          <nav className="hidden md:flex space-x-10">
             {['Properties', 'About', 'Dubai', 'Contact'].map((item) => (
               <button 
                 key={item}
                 onClick={() => scrollToSection(item.toLowerCase())}
-                className="text-slate-700 hover:text-slate-900 transition-colors font-medium"
+                className="text-slate-700 hover:text-slate-900 transition-colors text-sm font-medium tracking-wide"
               >
                 {item}
               </button>
             ))}
           </nav>
-          <Button className="md:hidden bg-slate-900 hover:bg-slate-800 text-white">
+          <Button className="md:hidden bg-slate-900 hover:bg-slate-800 text-white text-sm">
             Menu
           </Button>
         </div>
@@ -80,21 +80,21 @@ const Index = () => {
             alt="Dubai luxury development"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-slate-900/40"></div>
+          <div className="absolute inset-0 bg-slate-900/30"></div>
         </div>
         
         <div className="text-center z-10 px-6 max-w-4xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6 text-white leading-tight">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-8 text-white leading-tight tracking-tight">
             Luxury Living in the<br />Heart of Dubai
           </h1>
           
-          <p className="text-lg md:text-xl text-white/90 mb-8 font-light max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-white/90 mb-10 font-light max-w-2xl mx-auto leading-relaxed">
             A new standard in property development
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button 
-              className="bg-white text-slate-900 hover:bg-slate-100 font-medium px-8 py-3"
+              className="bg-white text-slate-900 hover:bg-slate-50 font-medium px-8 py-3 text-sm tracking-wide"
               onClick={() => scrollToSection('properties')}
             >
               View Properties
@@ -102,7 +102,7 @@ const Index = () => {
             
             <Button 
               variant="outline"
-              className="border-white text-white hover:bg-white hover:text-slate-900 px-8 py-3"
+              className="border-white/40 text-white hover:bg-white hover:text-slate-900 px-8 py-3 text-sm tracking-wide backdrop-blur-sm"
               onClick={() => scrollToSection('contact')}
             >
               <Phone className="w-4 h-4 mr-2" />
@@ -111,22 +111,22 @@ const Index = () => {
           </div>
         </div>
         
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-          <ArrowDown className="w-5 h-5 text-white/60" />
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <ArrowDown className="w-4 h-4 text-white/60" />
         </div>
       </section>
 
       {/* Trust Signals */}
-      <section className="py-16 bg-slate-50">
-        <div className="container mx-auto px-6 max-w-6xl">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+      <section className="py-20 bg-slate-50/50">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
             {trustSignals.map((signal, index) => (
               <div key={index} className="text-center reveal">
-                <signal.icon className="w-8 h-8 text-slate-600 mx-auto mb-3" />
-                <h4 className="font-medium text-slate-900 mb-2">
+                <signal.icon className="w-8 h-8 text-slate-600 mx-auto mb-4" />
+                <h4 className="font-medium text-slate-900 mb-2 text-sm tracking-wide">
                   {signal.label}
                 </h4>
-                <p className="text-sm text-slate-600">
+                <p className="text-sm text-slate-600 leading-relaxed">
                   {signal.desc}
                 </p>
               </div>
@@ -136,13 +136,13 @@ const Index = () => {
       </section>
 
       {/* Properties Preview */}
-      <section id="properties" className="py-20 bg-white">
-        <div className="container mx-auto px-6 max-w-6xl">
+      <section id="properties" className="py-24 bg-white">
+        <div className="container mx-auto px-6 max-w-7xl">
           <div className="text-center mb-16 reveal">
-            <h2 className="text-3xl md:text-4xl font-light mb-4 text-slate-900">
+            <h2 className="text-3xl md:text-4xl font-light mb-6 text-slate-900 tracking-tight">
               Coming Soon
             </h2>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
               Curated properties in Dubai's most sought-after locations
             </p>
           </div>
@@ -168,36 +168,36 @@ const Index = () => {
                 features: ["Golf Course Views", "Private Gardens", "Exclusive Community"]
               }
             ].map((property, index) => (
-              <Card key={index} className="group overflow-hidden border border-slate-200 hover:border-slate-300 transition-colors reveal">
+              <Card key={index} className="group overflow-hidden border border-slate-200 hover:border-slate-300 transition-all duration-300 reveal">
                 <div className="relative h-64 overflow-hidden">
                   <img 
                     src={`https://images.unsplash.com/${property.image}`}
                     alt={`${property.title} - ${property.area}`}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
                 </div>
                 
-                <CardContent className="p-6">
-                  <div className="mb-2">
-                    <span className="text-sm text-slate-500 font-medium">
+                <CardContent className="p-8">
+                  <div className="mb-3">
+                    <span className="text-sm text-slate-500 font-medium tracking-wide">
                       {property.area}
                     </span>
                   </div>
                   
-                  <h3 className="text-xl font-medium mb-4 text-slate-900">
+                  <h3 className="text-xl font-medium mb-6 text-slate-900 tracking-tight">
                     {property.title}
                   </h3>
                   
-                  <div className="space-y-2 mb-6">
+                  <div className="space-y-3 mb-8">
                     {property.features.map((feature, featureIndex) => (
                       <div key={featureIndex} className="flex items-center text-sm">
-                        <CheckCircle className="w-4 h-4 text-slate-400 mr-2 flex-shrink-0" />
+                        <CheckCircle className="w-4 h-4 text-slate-400 mr-3 flex-shrink-0" />
                         <span className="text-slate-600">{feature}</span>
                       </div>
                     ))}
                   </div>
                   
-                  <Button variant="outline" className="w-full">
+                  <Button variant="outline" className="w-full text-sm font-medium tracking-wide py-3">
                     Learn More
                   </Button>
                 </CardContent>
@@ -208,31 +208,31 @@ const Index = () => {
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-20 bg-slate-50">
-        <div className="container mx-auto px-6 max-w-6xl">
+      <section id="about" className="py-24 bg-slate-50/50">
+        <div className="container mx-auto px-6 max-w-7xl">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="reveal">
-              <h2 className="text-3xl md:text-4xl font-light mb-6 text-slate-900">
+              <h2 className="text-3xl md:text-4xl font-light mb-8 text-slate-900 tracking-tight leading-tight">
                 Iconic Properties,<br />Visionary Living
               </h2>
               
-              <p className="text-lg text-slate-600 mb-8 leading-relaxed">
+              <p className="text-lg text-slate-600 mb-10 leading-relaxed">
                 We specialize in connecting discerning clients with Dubai's most exceptional properties, 
                 delivering personalized service and unparalleled market expertise.
               </p>
               
-              <div className="grid grid-cols-2 gap-8 mb-8">
+              <div className="grid grid-cols-2 gap-12 mb-10">
                 <div>
-                  <h4 className="text-2xl font-light text-slate-900 mb-2">2024</h4>
-                  <p className="text-slate-600">Established</p>
+                  <h4 className="text-2xl font-light text-slate-900 mb-2 tracking-tight">2024</h4>
+                  <p className="text-slate-600 text-sm tracking-wide">Established</p>
                 </div>
                 <div>
-                  <h4 className="text-2xl font-light text-slate-900 mb-2">Premium</h4>
-                  <p className="text-slate-600">Focus</p>
+                  <h4 className="text-2xl font-light text-slate-900 mb-2 tracking-tight">Premium</h4>
+                  <p className="text-slate-600 text-sm tracking-wide">Focus</p>
                 </div>
               </div>
               
-              <Button className="bg-slate-900 hover:bg-slate-800 text-white">
+              <Button className="bg-slate-900 hover:bg-slate-800 text-white px-8 py-3 text-sm font-medium tracking-wide">
                 Learn More
               </Button>
             </div>
@@ -249,13 +249,13 @@ const Index = () => {
       </section>
 
       {/* Why Dubai */}
-      <section id="dubai" className="py-20 bg-white">
-        <div className="container mx-auto px-6 max-w-6xl">
+      <section id="dubai" className="py-24 bg-white">
+        <div className="container mx-auto px-6 max-w-7xl">
           <div className="text-center mb-16 reveal">
-            <h2 className="text-3xl md:text-4xl font-light mb-4 text-slate-900">
+            <h2 className="text-3xl md:text-4xl font-light mb-6 text-slate-900 tracking-tight">
               Why Dubai
             </h2>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
               A global destination offering unmatched investment returns and lifestyle opportunities
             </p>
           </div>
@@ -293,15 +293,15 @@ const Index = () => {
                 desc: "Ambitious development goals and infrastructure"
               }
             ].map((item, index) => (
-              <Card key={index} className="p-8 text-center border border-slate-200 reveal">
+              <Card key={index} className="p-8 text-center border border-slate-200 hover:border-slate-300 transition-colors duration-300 reveal">
                 <CardContent className="p-0">
-                  <h3 className="text-3xl font-light mb-3 text-slate-900">
+                  <h3 className="text-3xl font-light mb-4 text-slate-900 tracking-tight">
                     {item.stat}
                   </h3>
-                  <h4 className="font-medium mb-3 text-slate-900">
+                  <h4 className="font-medium mb-4 text-slate-900 text-sm tracking-wide">
                     {item.label}
                   </h4>
-                  <p className="text-slate-600">
+                  <p className="text-slate-600 leading-relaxed text-sm">
                     {item.desc}
                   </p>
                 </CardContent>
@@ -312,56 +312,56 @@ const Index = () => {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-20 bg-slate-50">
+      <section id="contact" className="py-24 bg-slate-50/50">
         <div className="container mx-auto px-6 max-w-4xl">
           <div className="text-center mb-16 reveal">
-            <h2 className="text-3xl md:text-4xl font-light mb-4 text-slate-900">
+            <h2 className="text-3xl md:text-4xl font-light mb-6 text-slate-900 tracking-tight">
               Get In Touch
             </h2>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
               Connect with our team to explore Dubai's premier real estate opportunities
             </p>
           </div>
           
           <Card className="bg-white border border-slate-200 reveal">
-            <CardContent className="p-8">
-              <form className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
+            <CardContent className="p-10">
+              <form className="space-y-8">
+                <div className="grid md:grid-cols-2 gap-8">
                   <div>
-                    <label htmlFor="name" className="block text-slate-900 font-medium mb-2">Name *</label>
+                    <label htmlFor="name" className="block text-slate-900 font-medium mb-3 text-sm tracking-wide">Name *</label>
                     <Input 
                       id="name"
-                      className="border-slate-300 focus:border-slate-500"
+                      className="border-slate-300 focus:border-slate-500 py-3 text-sm"
                       placeholder="Your name"
                       required
                     />
                   </div>
                   <div>
-                    <label htmlFor="email" className="block text-slate-900 font-medium mb-2">Email *</label>
+                    <label htmlFor="email" className="block text-slate-900 font-medium mb-3 text-sm tracking-wide">Email *</label>
                     <Input 
                       id="email"
                       type="email"
-                      className="border-slate-300 focus:border-slate-500"
+                      className="border-slate-300 focus:border-slate-500 py-3 text-sm"
                       placeholder="your@email.com"
                       required
                     />
                   </div>
                 </div>
                 
-                <div className="grid md:grid-cols-2 gap-6">
+                <div className="grid md:grid-cols-2 gap-8">
                   <div>
-                    <label htmlFor="phone" className="block text-slate-900 font-medium mb-2">Phone</label>
+                    <label htmlFor="phone" className="block text-slate-900 font-medium mb-3 text-sm tracking-wide">Phone</label>
                     <Input 
                       id="phone"
                       type="tel"
-                      className="border-slate-300 focus:border-slate-500"
+                      className="border-slate-300 focus:border-slate-500 py-3 text-sm"
                       placeholder="+971 XX XXX XXXX"
                     />
                   </div>
                   <div>
-                    <label htmlFor="interest" className="block text-slate-900 font-medium mb-2">Interest</label>
+                    <label htmlFor="interest" className="block text-slate-900 font-medium mb-3 text-sm tracking-wide">Interest</label>
                     <Select>
-                      <SelectTrigger className="border-slate-300">
+                      <SelectTrigger className="border-slate-300 py-3">
                         <SelectValue placeholder="Select your interest" />
                       </SelectTrigger>
                       <SelectContent>
@@ -375,27 +375,27 @@ const Index = () => {
                 </div>
                 
                 <div>
-                  <label htmlFor="message" className="block text-slate-900 font-medium mb-2">Message</label>
+                  <label htmlFor="message" className="block text-slate-900 font-medium mb-3 text-sm tracking-wide">Message</label>
                   <Textarea 
                     id="message"
-                    className="border-slate-300 focus:border-slate-500 min-h-32"
+                    className="border-slate-300 focus:border-slate-500 min-h-32 text-sm"
                     placeholder="Tell us about your requirements..."
                   />
                 </div>
                 
                 <Button 
                   type="submit"
-                  className="w-full bg-slate-900 hover:bg-slate-800 text-white py-3"
+                  className="w-full bg-slate-900 hover:bg-slate-800 text-white py-4 text-sm font-medium tracking-wide"
                 >
                   Send Message
                 </Button>
               </form>
               
-              <div className="mt-8 pt-6 border-t border-slate-200 text-center">
-                <p className="text-slate-600 mb-2">
+              <div className="mt-10 pt-8 border-t border-slate-200 text-center">
+                <p className="text-slate-600 mb-3 text-sm">
                   Prefer to call? Speak with our team directly
                 </p>
-                <div className="flex flex-col sm:flex-row gap-2 justify-center items-center">
+                <div className="flex flex-col sm:flex-row gap-2 justify-center items-center text-sm">
                   <a href="tel:+971-4-XXX-XXXX" className="text-slate-900 font-medium hover:text-slate-700 transition-colors">
                     +971 4 XXX XXXX
                   </a>
@@ -409,12 +409,12 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="py-16 bg-slate-900 text-white">
-        <div className="container mx-auto px-6 max-w-6xl">
-          <div className="grid md:grid-cols-4 gap-8 mb-12">
+      <footer className="py-20 bg-slate-900 text-white">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div className="grid md:grid-cols-4 gap-12 mb-12">
             <div className="md:col-span-2">
-              <h3 className="text-2xl font-medium mb-4">Moonscape</h3>
-              <p className="text-white/80 mb-6 leading-relaxed">
+              <h3 className="text-2xl font-light mb-6 tracking-tight">Moonscape</h3>
+              <p className="text-white/80 mb-8 leading-relaxed text-sm">
                 Your gateway to Dubai's most prestigious properties and investment opportunities.
               </p>
               <div className="flex space-x-4">
@@ -428,15 +428,15 @@ const Index = () => {
                     className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 transition-colors"
                     aria-label={social.label}
                   >
-                    <social.icon className="w-5 h-5" />
+                    <social.icon className="w-4 h-4" />
                   </a>
                 ))}
               </div>
             </div>
             
             <div>
-              <h4 className="font-medium text-white mb-4">Properties</h4>
-              <ul className="space-y-2 text-white/70">
+              <h4 className="font-medium text-white mb-6 text-sm tracking-wide">Properties</h4>
+              <ul className="space-y-3 text-white/70 text-sm">
                 {['Apartments', 'Villas', 'Penthouses', 'Commercial', 'Off-Plan', 'Investment'].map((item) => (
                   <li key={item}>
                     <a href="#" className="hover:text-white transition-colors">{item}</a>
@@ -446,8 +446,8 @@ const Index = () => {
             </div>
             
             <div>
-              <h4 className="font-medium text-white mb-4">Company</h4>
-              <ul className="space-y-2 text-white/70">
+              <h4 className="font-medium text-white mb-6 text-sm tracking-wide">Company</h4>
+              <ul className="space-y-3 text-white/70 text-sm">
                 {['About Us', 'Our Team', 'Careers', 'News', 'Contact', 'Legal'].map((item) => (
                   <li key={item}>
                     <a href="#" className="hover:text-white transition-colors">{item}</a>
@@ -459,15 +459,15 @@ const Index = () => {
           
           <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/20">
             <div className="mb-4 md:mb-0">
-              <p className="text-white/60 mb-1">
+              <p className="text-white/60 mb-1 text-sm">
                 © 2024 Moonscape Real Estate. All rights reserved.
               </p>
-              <p className="text-white/50 text-sm">
+              <p className="text-white/50 text-xs">
                 RERA Licensed | Dubai, United Arab Emirates
               </p>
             </div>
             
-            <div className="flex gap-6 text-sm">
+            <div className="flex gap-8 text-sm">
               <a href="#" className="text-white/60 hover:text-white transition-colors">Privacy</a>
               <a href="#" className="text-white/60 hover:text-white transition-colors">Terms</a>
               <a href="#" className="text-white/60 hover:text-white transition-colors">Cookies</a>
