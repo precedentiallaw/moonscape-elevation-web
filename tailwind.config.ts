@@ -13,7 +13,7 @@ export default {
 	theme: {
 		container: {
 			center: true,
-			padding: '1rem',
+			padding: '1.5rem',
 			screens: {
 				'sm': '640px',
 				'md': '768px',
@@ -24,8 +24,8 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				'serif': ['Outfit', 'sans-serif'],
-				'sans': ['Inter', 'sans-serif'],
+				'serif': ['Playfair Display', 'Georgia', 'serif'],
+				'sans': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
@@ -62,12 +62,13 @@ export default {
 					foreground: 'hsl(var(--card-foreground))'
 				},
 				moonscape: {
-					ivory: 'hsl(var(--moonscape-ivory))',
 					charcoal: 'hsl(var(--moonscape-charcoal))',
 					platinum: 'hsl(var(--moonscape-platinum))',
-					blue: 'hsl(var(--moonscape-blue))',
+					navy: 'hsl(var(--moonscape-navy))',
 					gold: 'hsl(var(--moonscape-gold))',
-					'light-gray': 'hsl(var(--moonscape-light-gray))',
+					pearl: 'hsl(var(--moonscape-pearl))',
+					ivory: 'hsl(var(--moonscape-ivory))',
+					bronze: 'hsl(var(--moonscape-bronze))',
 				}
 			},
 			borderRadius: {
@@ -91,14 +92,57 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'fade-in': {
+					'0%': {
+						opacity: '0',
+						transform: 'translateY(20px)'
+					},
+					'100%': {
+						opacity: '1',
+						transform: 'translateY(0)'
+					}
+				},
+				'slide-up': {
+					'0%': {
+						opacity: '0',
+						transform: 'translateY(40px)'
+					},
+					'100%': {
+						opacity: '1',
+						transform: 'translateY(0)'
+					}
+				},
+				'scale-in': {
+					'0%': {
+						opacity: '0',
+						transform: 'scale(0.9)'
+					},
+					'100%': {
+						opacity: '1',
+						transform: 'scale(1)'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-in': 'fade-in 0.6s ease-out',
+				'slide-up': 'slide-up 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
+				'scale-in': 'scale-in 0.5s cubic-bezier(0.16, 1, 0.3, 1)'
 			},
 			screens: {
 				'xs': '475px',
+				'3xl': '1600px',
+			},
+			spacing: {
+				'18': '4.5rem',
+				'88': '22rem',
+				'128': '32rem',
+			},
+			maxWidth: {
+				'8xl': '88rem',
+				'9xl': '96rem',
 			}
 		}
 	},

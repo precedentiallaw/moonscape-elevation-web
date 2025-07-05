@@ -1,49 +1,50 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Modern Design System */
+/* Luxury Design System */
 @layer base {
   :root {
     --background: 0 0% 99%;
-    --foreground: 220 15% 15%;
+    --foreground: 215 25% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 15% 15%;
+    --card-foreground: 215 25% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 15% 15%;
+    --popover-foreground: 215 25% 15%;
 
-    --primary: 210 40% 15%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 215 40% 12%;
+    --primary-foreground: 0 0% 98%;
 
-    --secondary: 210 20% 96%;
-    --secondary-foreground: 220 15% 15%;
+    --secondary: 215 20% 96%;
+    --secondary-foreground: 215 25% 15%;
 
-    --muted: 210 20% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 215 20% 95%;
+    --muted-foreground: 215 16% 46%;
 
-    --accent: 210 20% 94%;
-    --accent-foreground: 220 15% 15%;
+    --accent: 215 20% 93%;
+    --accent-foreground: 215 25% 15%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 210 40% 15%;
+    --border: 215 20% 89%;
+    --input: 215 20% 89%;
+    --ring: 215 40% 12%;
 
-    --radius: 0.75rem;
+    --radius: 0.875rem;
 
-    /* Custom Brand Colors */
-    --moonscape-charcoal: 220 15% 20%;
-    --moonscape-platinum: 210 20% 45%;
-    --moonscape-blue: 210 40% 15%;
-    --moonscape-gold: 45 85% 55%;
-    --moonscape-light-gray: 210 20% 96%;
-    --moonscape-ivory: 60 20% 99%;
+    /* Moonscape Luxury Palette */
+    --moonscape-charcoal: 215 25% 15%;
+    --moonscape-platinum: 215 15% 45%;
+    --moonscape-navy: 215 40% 12%;
+    --moonscape-gold: 45 95% 58%;
+    --moonscape-pearl: 215 20% 96%;
+    --moonscape-ivory: 45 30% 98%;
+    --moonscape-bronze: 25 45% 35%;
   }
 }
 
@@ -54,85 +55,153 @@
 
   html {
     scroll-behavior: smooth;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-background text-foreground antialiased;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-    line-height: 1.7;
-    letter-spacing: -0.01em;
+    line-height: 1.65;
+    letter-spacing: -0.011em;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-family: 'Playfair Display', Georgia, serif;
     font-weight: 600;
-    line-height: 1.2;
-    letter-spacing: -0.02em;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "swsh" 1;
   }
 
   h1 {
-    @apply text-4xl sm:text-5xl md:text-6xl lg:text-7xl;
+    @apply text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl;
+    font-weight: 700;
   }
 
   h2 {
-    @apply text-3xl sm:text-4xl md:text-5xl;
+    @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl;
+    font-weight: 600;
   }
 
   h3 {
-    @apply text-2xl sm:text-3xl md:text-4xl;
+    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl;
+    font-weight: 600;
+  }
+
+  h4 {
+    @apply text-xl sm:text-2xl md:text-3xl;
+    font-weight: 500;
   }
 
   p {
-    @apply text-base sm:text-lg;
-    line-height: 1.8;
+    @apply text-base sm:text-lg md:text-xl;
+    line-height: 1.75;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .lead {
+    @apply text-lg sm:text-xl md:text-2xl;
+    line-height: 1.65;
+    font-weight: 400;
   }
 }
 
 @layer utilities {
+  /* Luxury Shadows */
   .luxury-shadow {
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.02);
+    box-shadow: 
+      0 1px 3px rgba(0, 0, 0, 0.05),
+      0 4px 12px rgba(0, 0, 0, 0.04),
+      0 8px 24px rgba(0, 0, 0, 0.03);
   }
   
   .premium-shadow {
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+    box-shadow: 
+      0 2px 8px rgba(0, 0, 0, 0.06),
+      0 8px 24px rgba(0, 0, 0, 0.08),
+      0 16px 40px rgba(0, 0, 0, 0.06);
+  }
+
+  .hero-shadow {
+    box-shadow: 
+      0 4px 20px rgba(0, 0, 0, 0.08),
+      0 12px 40px rgba(0, 0, 0, 0.12),
+      0 20px 60px rgba(0, 0, 0, 0.08);
   }
   
+  /* Professional Spacing */
   .section-spacing {
-    @apply py-16 sm:py-20 md:py-24 lg:py-32;
+    @apply py-20 sm:py-24 md:py-28 lg:py-32 xl:py-40;
   }
   
   .container-padding {
-    @apply px-4 sm:px-6 md:px-8 lg:px-12;
+    @apply px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16;
   }
   
+  /* Luxury Gradients */
   .premium-gradient {
-    background: linear-gradient(135deg, #fefefe 0%, #f8f9fa 100%);
+    background: linear-gradient(135deg, #fefefe 0%, #f8f9fa 40%, #f1f3f4 100%);
+  }
+
+  .hero-gradient {
+    background: linear-gradient(135deg, rgba(21, 35, 62, 0.85) 0%, rgba(21, 35, 62, 0.75) 50%, rgba(0, 0, 0, 0.6) 100%);
   }
   
   .text-balance {
     text-wrap: balance;
   }
 
-  /* Mobile-first hero image sizing */
+  /* Enhanced Hero */
   .hero-image {
-    @apply w-full h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-[90vh] xl:h-screen object-cover;
+    @apply w-full h-screen object-cover object-center;
+    min-height: 100vh;
   }
 
-  /* Mobile-optimized text sizing */
   .hero-title {
-    @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl;
+    @apply text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl;
+    line-height: 0.95;
   }
 
   .hero-subtitle {
-    @apply text-lg sm:text-xl md:text-2xl;
+    @apply text-xl sm:text-2xl md:text-3xl;
+    font-weight: 300;
+  }
+
+  /* Property Cards */
+  .property-card {
+    @apply bg-white rounded-2xl overflow-hidden luxury-shadow hover:premium-shadow;
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .property-card:hover {
+    transform: translateY(-8px);
+  }
+
+  /* Button Styles */
+  .btn-primary {
+    @apply bg-moonscape-navy hover:bg-moonscape-charcoal text-white font-semibold;
+    @apply px-8 py-4 text-lg rounded-xl luxury-shadow;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    @apply hero-shadow;
+  }
+
+  .btn-secondary {
+    @apply border-2 border-moonscape-navy text-moonscape-navy hover:bg-moonscape-navy hover:text-white;
+    @apply px-8 py-4 text-lg rounded-xl font-semibold;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
 }
 
 /* Premium Animations */
-@keyframes fade-in-up {
+@keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(32px);
+    transform: translateY(40px);
   }
   to {
     opacity: 1;
@@ -140,15 +209,21 @@
   }
 }
 
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slide-in-left {
+@keyframes fadeInScale {
   from {
     opacity: 0;
-    transform: translateX(-32px);
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
   }
   to {
     opacity: 1;
@@ -156,27 +231,31 @@
   }
 }
 
-@keyframes parallax {
-  from { transform: translateY(0px); }
-  to { transform: translateY(-20px); }
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
 }
 
 .animate-fade-in-up {
-  animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.animate-fade-in {
-  animation: fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.animate-fade-in-scale {
+  animation: fadeInScale 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .animate-slide-in-left {
-  animation: slide-in-left 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: slideInLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Intersection Observer Classes */
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Intersection Observer */
 .reveal {
   opacity: 0;
-  transform: translateY(32px);
+  transform: translateY(40px);
   transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -185,9 +264,20 @@
   transform: translateY(0);
 }
 
-/* Custom Scrollbar */
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-scale.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Enhanced Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -195,30 +285,30 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--primary));
-  border-radius: 3px;
+  background: linear-gradient(to bottom, hsl(var(--primary)), hsl(var(--moonscape-gold)));
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--primary) / 0.8);
+  background: linear-gradient(to bottom, hsl(var(--moonscape-gold)), hsl(var(--primary)));
 }
 
-/* Focus States */
+/* Focus & Selection */
 *:focus-visible {
-  outline: 2px solid hsl(var(--primary));
+  outline: 2px solid hsl(var(--moonscape-gold));
   outline-offset: 2px;
+  border-radius: 4px;
 }
 
-/* Selection */
 ::selection {
-  background: hsl(var(--primary) / 0.2);
+  background: hsl(var(--moonscape-gold) / 0.2);
   color: hsl(var(--foreground));
 }
 
-/* Mobile-specific optimizations */
+/* Mobile Optimizations */
 @media (max-width: 640px) {
   .section-spacing {
-    @apply py-12;
+    @apply py-16;
   }
   
   .container-padding {
@@ -227,9 +317,25 @@
   
   h1 {
     line-height: 1.1;
+    letter-spacing: -0.02em;
   }
   
-  .card {
-    @apply mx-4;
+  .hero-title {
+    line-height: 1.05;
+  }
+  
+  .property-card {
+    @apply mx-2;
+  }
+
+  .btn-primary, .btn-secondary {
+    @apply px-6 py-3 text-base;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .no-print {
+    display: none !important;
   }
 }

@@ -1,23 +1,42 @@
 
 {
-  "name": "Moonscape Real Estate",
+  "name": "Moonscape Real Estate - Luxury Dubai Properties",
   "short_name": "Moonscape",
-  "description": "Luxury Properties in Dubai - Elevated Living. Earthly Luxury.",
+  "description": "Dubai's premier luxury real estate specialist offering exclusive properties, investment opportunities, and personalized service to discerning clients worldwide.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#1B365D",
+  "background_color": "#fefefe",
+  "lang": "en-US",
   "icons": [
     {
       "src": "/favicon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "/favicon-512x512.png", 
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ],
-  "theme_color": "#1B365D",
-  "background_color": "#fefefe",
-  "display": "standalone",
-  "start_url": "/",
-  "scope": "/"
+  "categories": ["business", "finance", "lifestyle"],
+  "screenshots": [
+    {
+      "src": "/screenshot-wide.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpeg",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/screenshot-narrow.jpg",
+      "sizes": "640x1136",
+      "type": "image/jpeg",
+      "form_factor": "narrow"
+    }
+  ]
 }
