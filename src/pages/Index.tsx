@@ -9,20 +9,10 @@ import { ArrowDown, Phone, Instagram, Linkedin, Star, Shield, Award, TrendingUp,
 
 const Index = () => {
   const [scrollY, setScrollY] = useState(0);
-  const [currentHeroImage, setCurrentHeroImage] = useState(0);
-
-  const heroImages = [
-    '/lovable-uploads/498a41a4-2b3b-46d3-ad3e-17a2eed7f05c.png',
-    '/lovable-uploads/0d41c9e9-6144-4da8-88fd-55d452bb9bfa.png'
-  ];
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll);
-    
-    const imageInterval = setInterval(() => {
-      setCurrentHeroImage((prev) => (prev + 1) % heroImages.length);
-    }, 6000);
     
     const observer = new IntersectionObserver(
       (entries) => {
@@ -39,7 +29,6 @@ const Index = () => {
     
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      clearInterval(imageInterval);
       observer.disconnect();
     };
   }, []);
@@ -54,77 +43,58 @@ const Index = () => {
   const trustSignals = [
     { icon: Award, label: "Industry Recognition", desc: "Award-winning developments" },
     { icon: Shield, label: "RERA Licensed", desc: "Fully regulated & compliant" },
-    { icon: Star, label: "Client Excellence", desc: "Premium service standards" },
+    { icon: Star, label: "Client Excellence", desc: "5-star service standards" },
     { icon: TrendingUp, label: "Market Leadership", desc: "Proven track record" }
   ];
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
       {/* Header */}
-      <header className="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-xl border-b border-slate-200/50 shadow-sm transition-all duration-500">
-        <div className="container mx-auto px-6 py-5 flex items-center justify-between max-w-7xl">
-          <div className="font-serif text-3xl font-bold text-slate-900">
+      <header className="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-sm border-b border-slate-200">
+        <div className="container mx-auto px-6 py-4 flex items-center justify-between max-w-6xl">
+          <div className="text-xl font-semibold text-slate-900">
             Moonscape
           </div>
-          <nav className="hidden md:flex space-x-10">
+          <nav className="hidden md:flex space-x-8">
             {['Properties', 'About', 'Dubai', 'Contact'].map((item) => (
               <button 
                 key={item}
                 onClick={() => scrollToSection(item.toLowerCase())}
-                className="relative hover:text-amber-600 transition-all duration-300 font-medium text-lg group"
+                className="text-slate-700 hover:text-slate-900 transition-colors font-medium"
               >
                 {item}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-amber-500 transition-all duration-300 group-hover:w-full"></span>
               </button>
             ))}
           </nav>
-          <Button className="md:hidden bg-slate-900 hover:bg-slate-800 text-white px-6 py-2">
+          <Button className="md:hidden bg-slate-900 hover:bg-slate-800 text-white">
             Menu
           </Button>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
-          {heroImages.map((image, index) => (
-            <div
-              key={image}
-              className={`absolute inset-0 transition-opacity duration-2000 ${
-                index === currentHeroImage ? 'opacity-100' : 'opacity-0'
-              }`}
-              style={{
-                transform: `translateY(${scrollY * 0.3}px)`,
-              }}
-            >
-              <img 
-                src={image}
-                alt="Luxury Dubai development"
-                className="w-full h-screen object-cover scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-slate-900/70 via-slate-900/50 to-transparent"></div>
-            </div>
-          ))}
+          <img 
+            src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1600&h=900&fit=crop&q=80"
+            alt="Dubai luxury development"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-slate-900/40"></div>
         </div>
         
-        <div className="text-center z-10 px-6 max-w-6xl animate-fade-in">
-          <div className="mb-8">
-            <span className="inline-block px-6 py-3 bg-amber-500/20 text-amber-700 font-semibold rounded-full text-sm backdrop-blur-md border border-amber-400/30">
-              Premium Real Estate
-            </span>
-          </div>
-          
-          <h1 className="font-serif font-bold mb-10 text-white leading-[0.9] text-5xl sm:text-6xl md:text-7xl lg:text-8xl drop-shadow-2xl">
-            Discover Elevated<br />Living
+        <div className="text-center z-10 px-6 max-w-4xl">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6 text-white leading-tight">
+            Luxury Living in the<br />Heart of Dubai
           </h1>
           
-          <p className="text-2xl sm:text-3xl text-white/90 mb-14 font-light max-w-4xl mx-auto leading-relaxed">
-            Signature properties in the heart of Dubai's most prestigious neighborhoods
+          <p className="text-lg md:text-xl text-white/90 mb-8 font-light max-w-2xl mx-auto">
+            A new standard in property development
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button 
-              className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold px-8 py-4 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 w-full sm:w-auto min-w-[200px]"
+              className="bg-white text-slate-900 hover:bg-slate-100 font-medium px-8 py-3"
               onClick={() => scrollToSection('properties')}
             >
               View Properties
@@ -132,31 +102,31 @@ const Index = () => {
             
             <Button 
               variant="outline"
-              className="bg-white/10 border-white/30 text-white hover:bg-white hover:text-slate-900 backdrop-blur-md px-8 py-4 text-lg rounded-xl w-full sm:w-auto min-w-[200px]"
+              className="border-white text-white hover:bg-white hover:text-slate-900 px-8 py-3"
               onClick={() => scrollToSection('contact')}
             >
-              <Phone className="w-5 h-5 mr-2" />
-              Get In Touch
+              <Phone className="w-4 h-4 mr-2" />
+              Contact Us
             </Button>
           </div>
         </div>
         
-        <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <ArrowDown className="w-6 h-6 text-white/70" />
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+          <ArrowDown className="w-5 h-5 text-white/60" />
         </div>
       </section>
 
       {/* Trust Signals */}
-      <section className="py-20 bg-slate-50">
-        <div className="container mx-auto px-6 max-w-7xl">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-12">
+      <section className="py-16 bg-slate-50">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {trustSignals.map((signal, index) => (
               <div key={index} className="text-center reveal">
-                <signal.icon className="w-10 h-10 text-amber-500 mx-auto mb-4" />
-                <h4 className="font-serif font-semibold text-slate-900 mb-2 text-lg">
+                <signal.icon className="w-8 h-8 text-slate-600 mx-auto mb-3" />
+                <h4 className="font-medium text-slate-900 mb-2">
                   {signal.label}
                 </h4>
-                <p className="text-slate-600 text-sm">
+                <p className="text-sm text-slate-600">
                   {signal.desc}
                 </p>
               </div>
@@ -166,75 +136,68 @@ const Index = () => {
       </section>
 
       {/* Properties Preview */}
-      <section id="properties" className="py-32 bg-white">
-        <div className="container mx-auto px-6 max-w-7xl">
-          <div className="text-center mb-24 reveal">
-            <div className="mb-6">
-              <span className="inline-block px-4 py-2 bg-amber-500/10 text-amber-700 font-semibold rounded-full text-sm">
-                Signature Collection
-              </span>
-            </div>
-            <h2 className="font-serif font-bold mb-10 text-slate-900 text-4xl sm:text-5xl md:text-6xl">
+      <section id="properties" className="py-20 bg-white">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <div className="text-center mb-16 reveal">
+            <h2 className="text-3xl md:text-4xl font-light mb-4 text-slate-900">
               Coming Soon
             </h2>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-              Curated real estate opportunities in Dubai's most sought-after locations
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+              Curated properties in Dubai's most sought-after locations
             </p>
           </div>
           
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               {
                 title: "Marina Collection",
                 area: "Dubai Marina",
-                image: "photo-1487958449943-2429e8be8625",
+                image: "photo-1545324418-cc1a3fa10c00?w=600&h=400&fit=crop&q=80",
                 features: ["Waterfront Views", "Premium Finishes", "World-Class Amenities"]
               },
               {
                 title: "Downtown Residences",
                 area: "Downtown Dubai", 
-                image: "photo-1545324418-cc1a3fa10c00",
+                image: "photo-1512453979798-5ea266f8880c?w=600&h=400&fit=crop&q=80",
                 features: ["City Skyline", "Prime Location", "Investment Grade"]
               },
               {
                 title: "Emirates Collection",
                 area: "Emirates Hills",
-                image: "photo-1527576539890-dfa815648363",
+                image: "photo-1487958449943-2429e8be8625?w=600&h=400&fit=crop&q=80",
                 features: ["Golf Course Views", "Private Gardens", "Exclusive Community"]
               }
             ].map((property, index) => (
-              <Card key={index} className="group overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 reveal">
-                <div className="relative h-80 overflow-hidden">
+              <Card key={index} className="group overflow-hidden border border-slate-200 hover:border-slate-300 transition-colors reveal">
+                <div className="relative h-64 overflow-hidden">
                   <img 
-                    src={`https://images.unsplash.com/${property.image}?w=800&h=600&fit=crop&q=80`}
+                    src={`https://images.unsplash.com/${property.image}`}
                     alt={`${property.title} - ${property.area}`}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    loading="lazy"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent"></div>
                 </div>
                 
-                <CardContent className="p-8">
-                  <div className="mb-4">
-                    <span className="text-amber-600 font-medium text-lg">
+                <CardContent className="p-6">
+                  <div className="mb-2">
+                    <span className="text-sm text-slate-500 font-medium">
                       {property.area}
                     </span>
                   </div>
                   
-                  <h3 className="font-serif text-2xl font-bold mb-6 text-slate-900">
+                  <h3 className="text-xl font-medium mb-4 text-slate-900">
                     {property.title}
                   </h3>
                   
-                  <div className="space-y-3 mb-8">
+                  <div className="space-y-2 mb-6">
                     {property.features.map((feature, featureIndex) => (
-                      <div key={featureIndex} className="flex items-center">
-                        <CheckCircle className="w-5 h-5 text-amber-500 mr-3 flex-shrink-0" />
+                      <div key={featureIndex} className="flex items-center text-sm">
+                        <CheckCircle className="w-4 h-4 text-slate-400 mr-2 flex-shrink-0" />
                         <span className="text-slate-600">{feature}</span>
                       </div>
                     ))}
                   </div>
                   
-                  <Button className="w-full bg-slate-900 hover:bg-slate-800 text-white">
+                  <Button variant="outline" className="w-full">
                     Learn More
                   </Button>
                 </CardContent>
@@ -245,68 +208,54 @@ const Index = () => {
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-32 bg-slate-50">
-        <div className="container mx-auto px-6 max-w-7xl">
-          <div className="grid lg:grid-cols-2 gap-20 items-center">
+      <section id="about" className="py-20 bg-slate-50">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="reveal">
-              <div className="mb-6">
-                <span className="inline-block px-4 py-2 bg-slate-900/10 text-slate-900 font-semibold rounded-full text-sm">
-                  Our Approach
-                </span>
-              </div>
-              
-              <h2 className="font-serif font-bold mb-10 text-slate-900 text-4xl sm:text-5xl">
-                Redefining Excellence in Dubai Real Estate
+              <h2 className="text-3xl md:text-4xl font-light mb-6 text-slate-900">
+                Iconic Properties,<br />Visionary Living
               </h2>
               
-              <p className="text-xl text-slate-600 mb-10 leading-relaxed">
+              <p className="text-lg text-slate-600 mb-8 leading-relaxed">
                 We specialize in connecting discerning clients with Dubai's most exceptional properties, 
                 delivering personalized service and unparalleled market expertise.
               </p>
               
-              <div className="grid grid-cols-2 gap-8 mb-10">
-                <div className="text-center">
-                  <h4 className="font-serif text-4xl font-bold text-slate-900 mb-3">2024</h4>
+              <div className="grid grid-cols-2 gap-8 mb-8">
+                <div>
+                  <h4 className="text-2xl font-light text-slate-900 mb-2">2024</h4>
                   <p className="text-slate-600">Established</p>
                 </div>
-                <div className="text-center">
-                  <h4 className="font-serif text-4xl font-bold text-slate-900 mb-3">Premium</h4>
+                <div>
+                  <h4 className="text-2xl font-light text-slate-900 mb-2">Premium</h4>
                   <p className="text-slate-600">Focus</p>
                 </div>
               </div>
               
-              <Button className="bg-slate-900 hover:bg-slate-800 text-white px-8 py-4 text-lg">
-                Discover More
+              <Button className="bg-slate-900 hover:bg-slate-800 text-white">
+                Learn More
               </Button>
             </div>
             
             <div className="relative reveal">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-                <img 
-                  src="https://images.unsplash.com/photo-1470813740244-df37b8c1edcb?w=800&h=600&fit=crop&q=80"
-                  alt="Modern Dubai architecture"
-                  className="w-full h-auto"
-                  loading="lazy"
-                />
-              </div>
+              <img 
+                src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&h=400&fit=crop&q=80"
+                alt="Modern Dubai architecture"
+                className="w-full h-auto rounded-lg"
+              />
             </div>
           </div>
         </div>
       </section>
 
       {/* Why Dubai */}
-      <section id="dubai" className="py-32 bg-white">
-        <div className="container mx-auto px-6 max-w-7xl">
-          <div className="text-center mb-24 reveal">
-            <div className="mb-6">
-              <span className="inline-block px-4 py-2 bg-amber-500/10 text-amber-700 font-semibold rounded-full text-sm">
-                Investment Opportunity
-              </span>
-            </div>
-            <h2 className="font-serif font-bold mb-10 text-slate-900 text-4xl sm:text-5xl md:text-6xl">
+      <section id="dubai" className="py-20 bg-white">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <div className="text-center mb-16 reveal">
+            <h2 className="text-3xl md:text-4xl font-light mb-4 text-slate-900">
               Why Dubai
             </h2>
-            <p className="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
               A global destination offering unmatched investment returns and lifestyle opportunities
             </p>
           </div>
@@ -316,8 +265,7 @@ const Index = () => {
               { 
                 stat: "0%", 
                 label: "Capital Gains Tax", 
-                desc: "Tax-free environment for property investments",
-                highlight: true
+                desc: "Tax-free environment for property investments"
               },
               { 
                 stat: "6-10%", 
@@ -342,19 +290,18 @@ const Index = () => {
               { 
                 stat: "2030", 
                 label: "Vision", 
-                desc: "Ambitious development goals and infrastructure",
-                highlight: true 
+                desc: "Ambitious development goals and infrastructure"
               }
             ].map((item, index) => (
-              <Card key={index} className={`p-10 text-center shadow-lg hover:shadow-xl transition-all duration-500 reveal ${item.highlight ? 'bg-slate-900 text-white' : 'bg-white'}`}>
+              <Card key={index} className="p-8 text-center border border-slate-200 reveal">
                 <CardContent className="p-0">
-                  <h3 className={`font-serif text-5xl font-bold mb-5 ${item.highlight ? 'text-amber-400' : 'text-slate-900'}`}>
+                  <h3 className="text-3xl font-light mb-3 text-slate-900">
                     {item.stat}
                   </h3>
-                  <h4 className={`font-bold mb-5 text-xl ${item.highlight ? 'text-white' : 'text-slate-900'}`}>
+                  <h4 className="font-medium mb-3 text-slate-900">
                     {item.label}
                   </h4>
-                  <p className={`leading-relaxed ${item.highlight ? 'text-white/90' : 'text-slate-600'}`}>
+                  <p className="text-slate-600">
                     {item.desc}
                   </p>
                 </CardContent>
@@ -365,64 +312,59 @@ const Index = () => {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-32 bg-slate-50">
-        <div className="container mx-auto px-6 max-w-5xl">
-          <div className="text-center mb-24 reveal">
-            <div className="mb-6">
-              <span className="inline-block px-4 py-2 bg-slate-900/10 text-slate-900 font-semibold rounded-full text-sm">
-                Get In Touch
-              </span>
-            </div>
-            <h2 className="font-serif font-bold mb-10 text-slate-900 text-4xl sm:text-5xl">
-              Start Your Journey
+      <section id="contact" className="py-20 bg-slate-50">
+        <div className="container mx-auto px-6 max-w-4xl">
+          <div className="text-center mb-16 reveal">
+            <h2 className="text-3xl md:text-4xl font-light mb-4 text-slate-900">
+              Get In Touch
             </h2>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
               Connect with our team to explore Dubai's premier real estate opportunities
             </p>
           </div>
           
-          <Card className="bg-white shadow-2xl reveal">
-            <CardContent className="p-12">
-              <form className="space-y-8">
-                <div className="grid md:grid-cols-2 gap-8">
-                  <div className="space-y-4">
-                    <label htmlFor="name" className="text-slate-900 font-semibold text-lg">Name *</label>
+          <Card className="bg-white border border-slate-200 reveal">
+            <CardContent className="p-8">
+              <form className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="name" className="block text-slate-900 font-medium mb-2">Name *</label>
                     <Input 
                       id="name"
-                      className="border-slate-300 focus:border-amber-500 text-lg py-4 transition-all duration-300 rounded-xl"
+                      className="border-slate-300 focus:border-slate-500"
                       placeholder="Your name"
                       required
                     />
                   </div>
-                  <div className="space-y-4">
-                    <label htmlFor="email" className="text-slate-900 font-semibold text-lg">Email *</label>
+                  <div>
+                    <label htmlFor="email" className="block text-slate-900 font-medium mb-2">Email *</label>
                     <Input 
                       id="email"
                       type="email"
-                      className="border-slate-300 focus:border-amber-500 text-lg py-4 transition-all duration-300 rounded-xl"
+                      className="border-slate-300 focus:border-slate-500"
                       placeholder="your@email.com"
                       required
                     />
                   </div>
                 </div>
                 
-                <div className="grid md:grid-cols-2 gap-8">
-                  <div className="space-y-4">
-                    <label htmlFor="phone" className="text-slate-900 font-semibold text-lg">Phone</label>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="phone" className="block text-slate-900 font-medium mb-2">Phone</label>
                     <Input 
                       id="phone"
                       type="tel"
-                      className="border-slate-300 focus:border-amber-500 text-lg py-4 transition-all duration-300 rounded-xl"
+                      className="border-slate-300 focus:border-slate-500"
                       placeholder="+971 XX XXX XXXX"
                     />
                   </div>
-                  <div className="space-y-4">
-                    <label htmlFor="interest" className="text-slate-900 font-semibold text-lg">Interest</label>
+                  <div>
+                    <label htmlFor="interest" className="block text-slate-900 font-medium mb-2">Interest</label>
                     <Select>
-                      <SelectTrigger className="border-slate-300 text-lg py-4 transition-all duration-300 rounded-xl">
+                      <SelectTrigger className="border-slate-300">
                         <SelectValue placeholder="Select your interest" />
                       </SelectTrigger>
-                      <SelectContent className="bg-white rounded-xl">
+                      <SelectContent>
                         <SelectItem value="buy">Buying Property</SelectItem>
                         <SelectItem value="invest">Investment Opportunities</SelectItem>
                         <SelectItem value="sell">Selling Property</SelectItem>
@@ -432,29 +374,29 @@ const Index = () => {
                   </div>
                 </div>
                 
-                <div className="space-y-4">
-                  <label htmlFor="message" className="text-slate-900 font-semibold text-lg">Message</label>
+                <div>
+                  <label htmlFor="message" className="block text-slate-900 font-medium mb-2">Message</label>
                   <Textarea 
                     id="message"
-                    className="border-slate-300 focus:border-amber-500 min-h-32 text-lg transition-all duration-300 rounded-xl"
+                    className="border-slate-300 focus:border-slate-500 min-h-32"
                     placeholder="Tell us about your requirements..."
                   />
                 </div>
                 
                 <Button 
                   type="submit"
-                  className="w-full bg-slate-900 hover:bg-slate-800 text-white py-6 text-xl font-bold rounded-xl"
+                  className="w-full bg-slate-900 hover:bg-slate-800 text-white py-3"
                 >
                   Send Message
                 </Button>
               </form>
               
-              <div className="mt-12 pt-8 border-t border-slate-200 text-center">
-                <p className="text-slate-600 text-lg mb-4">
+              <div className="mt-8 pt-6 border-t border-slate-200 text-center">
+                <p className="text-slate-600 mb-2">
                   Prefer to call? Speak with our team directly
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                  <a href="tel:+971-4-XXX-XXXX" className="text-slate-900 font-bold text-xl hover:text-amber-600 transition-colors">
+                <div className="flex flex-col sm:flex-row gap-2 justify-center items-center">
+                  <a href="tel:+971-4-XXX-XXXX" className="text-slate-900 font-medium hover:text-slate-700 transition-colors">
                     +971 4 XXX XXXX
                   </a>
                   <span className="hidden sm:inline text-slate-400">|</span>
@@ -467,18 +409,15 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="py-20 bg-slate-900 text-white">
-        <div className="container mx-auto px-6 max-w-7xl">
-          <div className="grid md:grid-cols-4 gap-12 mb-16">
+      <footer className="py-16 bg-slate-900 text-white">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <div className="grid md:grid-cols-4 gap-8 mb-12">
             <div className="md:col-span-2">
-              <h3 className="font-serif text-4xl font-bold mb-6">Moonscape</h3>
-              <p className="text-white/80 text-xl mb-8 font-light leading-relaxed">
-                Discover Elevated Living
-              </p>
-              <p className="text-white/60 leading-relaxed max-w-lg text-lg mb-8">
+              <h3 className="text-2xl font-medium mb-4">Moonscape</h3>
+              <p className="text-white/80 mb-6 leading-relaxed">
                 Your gateway to Dubai's most prestigious properties and investment opportunities.
               </p>
-              <div className="flex space-x-6">
+              <div className="flex space-x-4">
                 {[
                   { icon: Instagram, href: "#", label: "Instagram" },
                   { icon: Linkedin, href: "#", label: "LinkedIn" },
@@ -486,52 +425,52 @@ const Index = () => {
                   <a 
                     key={social.label}
                     href={social.href} 
-                    className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-white/70 hover:text-white hover:bg-amber-500 transition-all duration-300 hover:scale-110 transform"
+                    className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 transition-colors"
                     aria-label={social.label}
                   >
-                    <social.icon className="w-6 h-6" />
+                    <social.icon className="w-5 h-5" />
                   </a>
                 ))}
               </div>
             </div>
             
             <div>
-              <h4 className="font-bold text-white mb-6 uppercase tracking-wider text-sm">PROPERTIES</h4>
-              <ul className="space-y-4 text-white/70">
+              <h4 className="font-medium text-white mb-4">Properties</h4>
+              <ul className="space-y-2 text-white/70">
                 {['Apartments', 'Villas', 'Penthouses', 'Commercial', 'Off-Plan', 'Investment'].map((item) => (
                   <li key={item}>
-                    <a href="#" className="hover:text-white transition-colors duration-300 text-lg hover:text-amber-400">{item}</a>
+                    <a href="#" className="hover:text-white transition-colors">{item}</a>
                   </li>
                 ))}
               </ul>
             </div>
             
             <div>
-              <h4 className="font-bold text-white mb-6 uppercase tracking-wider text-sm">COMPANY</h4>
-              <ul className="space-y-4 text-white/70">
+              <h4 className="font-medium text-white mb-4">Company</h4>
+              <ul className="space-y-2 text-white/70">
                 {['About Us', 'Our Team', 'Careers', 'News', 'Contact', 'Legal'].map((item) => (
                   <li key={item}>
-                    <a href="#" className="hover:text-white transition-colors duration-300 text-lg hover:text-amber-400">{item}</a>
+                    <a href="#" className="hover:text-white transition-colors">{item}</a>
                   </li>
                 ))}
               </ul>
             </div>
           </div>
           
-          <div className="flex flex-col md:flex-row justify-between items-center pt-12 border-t border-white/20">
-            <div className="mb-6 md:mb-0 text-center md:text-left">
-              <p className="text-white/60 text-lg mb-2">
+          <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/20">
+            <div className="mb-4 md:mb-0">
+              <p className="text-white/60 mb-1">
                 © 2024 Moonscape Real Estate. All rights reserved.
               </p>
-              <p className="text-white/50 text-base">
+              <p className="text-white/50 text-sm">
                 RERA Licensed | Dubai, United Arab Emirates
               </p>
             </div>
             
-            <div className="flex flex-col sm:flex-row gap-6 text-center">
-              <a href="#" className="text-white/60 hover:text-white transition-colors text-base">Privacy</a>
-              <a href="#" className="text-white/60 hover:text-white transition-colors text-base">Terms</a>
-              <a href="#" className="text-white/60 hover:text-white transition-colors text-base">Cookies</a>
+            <div className="flex gap-6 text-sm">
+              <a href="#" className="text-white/60 hover:text-white transition-colors">Privacy</a>
+              <a href="#" className="text-white/60 hover:text-white transition-colors">Terms</a>
+              <a href="#" className="text-white/60 hover:text-white transition-colors">Cookies</a>
             </div>
           </div>
         </div>
