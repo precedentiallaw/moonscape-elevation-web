@@ -427,7 +427,6 @@ const Index = () => {
           </Card>
         </div>
       </section>
-
       {/* Footer */}
       <footer className="py-20 bg-slate-900 text-white">
         <div className="container mx-auto px-6 max-w-7xl">
@@ -435,49 +434,106 @@ const Index = () => {
             <div className="md:col-span-2">
               <h3 className="text-2xl font-light mb-6 tracking-tight">Moonscape</h3>
               <p className="text-white/80 mb-8 leading-relaxed text-sm">
-                {t("Your gateway to Dubai's most prestigious properties and investment opportunities.", "بوابتك إلى أرقى العقارات وفرص الاستثمار في دبي.")}
+                {t(
+                  "Your gateway to Dubai's most prestigious properties and investment opportunities.",
+                  "بوابتك إلى أكثر العقارات والمشاريع الاستثمارية تميزًا في دبي."
+                )}
               </p>
               <div className="flex space-x-4">
                 {[
                   { icon: Instagram, href: "#", label: "Instagram" },
                   { icon: Linkedin, href: "#", label: "LinkedIn" },
                 ].map((social) => (
-                  <a key={social.label} href={social.href} className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 transition-colors">
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 transition-colors"
+                    aria-label={social.label}
+                  >
                     <social.icon className="w-4 h-4" />
                   </a>
                 ))}
               </div>
             </div>
+
             <div>
-              <h4 className="font-medium text-white mb-6 text-sm tracking-wide">{t("Properties", "العقارات")}</h4>
+              <h4 className="font-medium text-white mb-6 text-sm tracking-wide">
+                {t("Properties", "العقارات")}
+              </h4>
               <ul className="space-y-3 text-white/70 text-sm">
-                {["Apartments", "Villas", "Penthouses", "Commercial", "Off-Plan", "Investment"].map((item) => (
+                {[
+                  t("Apartments", "شقق"),
+                  t("Villas", "فلل"),
+                  t("Penthouses", "بنتهاوس"),
+                  t("Commercial", "تجاري"),
+                  t("Off-Plan", "مشاريع قيد الإنشاء"),
+                  t("Investment", "استثمار"),
+                ].map((item) => (
                   <li key={item}>
-                    <a href="#" className="hover:text-white transition-colors">{t(item, "—")}</a>
+                    <a href="#" className="hover:text-white transition-colors">
+                      {item}
+                    </a>
                   </li>
                 ))}
               </ul>
             </div>
+
             <div>
-              <h4 className="font-medium text-white mb-6 text-sm tracking-wide">{t("Company", "الشركة")}</h4>
+              <h4 className="font-medium text-white mb-6 text-sm tracking-wide">
+                {t("Company", "الشركة")}
+              </h4>
               <ul className="space-y-3 text-white/70 text-sm">
-                {["About Us", "Our Team", "Careers", "News", "Contact", "Legal"].map((item) => (
+                {[
+                  t("About Us", "من نحن"),
+                  t("Our Team", "فريقنا"),
+                  t("Careers", "الوظائف"),
+                  t("News", "الأخبار"),
+                  t("Contact", "اتصل بنا"),
+                  t("Legal", "الشؤون القانونية"),
+                ].map((item) => (
                   <li key={item}>
-                    <a href="#" className="hover:text-white transition-colors">{t(item, "—")}</a>
+                    <a href="#" className="hover:text-white transition-colors">
+                      {item}
+                    </a>
                   </li>
                 ))}
               </ul>
             </div>
           </div>
+
           <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/20">
             <div className="mb-4 md:mb-0 text-sm text-white/60">
-              <p>© 2024 Moonscape Real Estate. {t("All rights reserved.", "جميع الحقوق محفوظة.")}</p>
-              <p className="text-xs text-white/50">{t("RERA Licensed | Dubai, United Arab Emirates", "مرخص من RERA | دبي، الإمارات العربية المتحدة")}</p>
+              <p>
+                © 2024 Moonscape Real Estate.{" "}
+                {t("All rights reserved.", "جميع الحقوق محفوظة.")}
+              </p>
+              <p className="text-xs text-white/50">
+                {t(
+                  "RERA Licensed | Dubai, United Arab Emirates",
+                  "مرخص من RERA | دبي، الإمارات العربية المتحدة"
+                )}
+              </p>
             </div>
+
             <div className="flex gap-8 text-sm">
-              {["Privacy", "Terms", "Cookies"].map((link) => (
-                <a key={link} href="#" className="text-white/60 hover:text-white transition-colors">{t(link, "—")}</a>
-              ))}
+              <a
+                href="#"
+                className="text-white/60 hover:text-white transition-colors"
+              >
+                {t("Privacy", "الخصوصية")}
+              </a>
+              <a
+                href="#"
+                className="text-white/60 hover:text-white transition-colors"
+              >
+                {t("Terms", "الشروط")}
+              </a>
+              <a
+                href="#"
+                className="text-white/60 hover:text-white transition-colors"
+              >
+                {t("Cookies", "ملفات تعريف الارتباط")}
+              </a>
             </div>
           </div>
         </div>
