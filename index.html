@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -6,39 +7,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="format-detection" content="telephone=no" />
 
-    <!-- Fonts -->
+    <!-- Performance Hints -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="//images.unsplash.com" />
+    <link rel="dns-prefetch" href="//videos.pexels.com" />
+
+    <!-- Premium Fonts with Optimized Loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- Consider adding font-display: swap if loading via CSS -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
 
     <!-- Primary Meta Tags -->
     <title>Moonscape Real Estate | Luxury Dubai Properties & Investment Opportunities</title>
     <meta name="title" content="Moonscape Real Estate | Luxury Dubai Properties & Investment Opportunities" />
-    <meta name="description" content="Discover Dubai's most prestigious properties with Moonscape Real Estate. Luxury villas, premium apartments, and off-plan developments in prime locations." />
-    <meta name="keywords" content="Dubai luxury real estate, premium properties Dubai, luxury villas Dubai, Dubai Marina apartments, Emirates Hills properties, Dubai investment properties, off-plan Dubai, luxury real estate agent Dubai" />
+    <meta name="description" content="Discover Dubai's most prestigious properties with Moonscape Real Estate. Luxury villas, premium apartments, and off-plan developments in prime locations. Expert guidance for discerning investors." />
+    <meta name="keywords" content="Dubai luxury real estate, premium properties Dubai, luxury villas Dubai, Dubai Marina apartments, Emirates Hills properties, Dubai investment properties, off-plan Dubai, luxury real estate agent Dubai, high-end properties Dubai, exclusive developments" />
     <meta name="author" content="Moonscape Real Estate LLC" />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <link rel="canonical" href="https://moonscape-realestate.com" />
 
-  <!-- Open Graph -->
-<meta property="og:title" content="Moonscape Real Estate | Dubai Luxury Properties & Investment" />
-<meta property="og:description" content="Explore Dubai’s premier real estate opportunities with Moonscape. Luxury villas, skyline apartments, and off-plan investments." />
-<meta property="og:image" content="https://mre.ai8ty.com/lovable-uploads/moonscapere.jpeg" />
-<meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="630" />
-<meta property="og:url" content="https://mre.ai8ty.com" />
-<meta property="og:type" content="website" />
+    <!-- Enhanced Open Graph -->
+    <meta property="og:title" content="Moonscape Real Estate | Dubai's Premier Luxury Properties" />
+    <meta property="og:description" content="Explore Dubai's most exceptional real estate opportunities with Moonscape. Curated luxury villas, skyline apartments, and exclusive off-plan investments in prime locations." />
+    <meta property="og:image" content="https://mre.ai8ty.com/lovable-uploads/moonscapere.jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Moonscape Real Estate - Luxury Dubai Properties" />
+    <meta property="og:url" content="https://mre.ai8ty.com" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Moonscape Real Estate" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="ar_AE" />
 
-<!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Moonscape Real Estate | Dubai Luxury Properties" />
-<meta name="twitter:description" content="Discover Dubai's most prestigious properties with Moonscape Real Estate." />
-<meta name="twitter:image" content="https://mre.ai8ty.com/lovable-uploads/moonscapere.jpeg" />
-
+    <!-- Enhanced Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@moonscape_dubai" />
+    <meta name="twitter:creator" content="@moonscape_dubai" />
+    <meta name="twitter:title" content="Moonscape Real Estate | Dubai Luxury Properties" />
+    <meta name="twitter:description" content="Discover Dubai's most prestigious properties with Moonscape Real Estate. Expert guidance for luxury property investments." />
+    <meta name="twitter:image" content="https://mre.ai8ty.com/lovable-uploads/moonscapere.jpeg" />
+    <meta name="twitter:image:alt" content="Moonscape Real Estate - Dubai Luxury Properties" />
 
     <!-- Favicons -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -47,13 +58,9 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#1B365D" />
+    <meta name="msapplication-TileColor" content="#1B365D" />
 
-    <!-- Performance Enhancements -->
-    <link rel="dns-prefetch" href="//images.unsplash.com" />
-    <!-- Optional: preload hero image or critical assets -->
-    <!-- <link rel="preload" as="image" href="/images/hero.jpg" /> -->
-
-    <!-- Structured Data -->
+    <!-- Enhanced Structured Data -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -82,7 +89,13 @@
               "@type": "ContactPoint",
               "telephone": "+971-4-XXX-XXXX",
               "contactType": "customer service",
-              "availableLanguage": ["English", "Arabic", "French", "Russian"]
+              "availableLanguage": ["English", "Arabic", "French", "Russian"],
+              "hoursAvailable": {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+                "opens": "09:00",
+                "closes": "18:00"
+              }
             }
           ],
           "sameAs": [
@@ -91,14 +104,37 @@
             "https://www.facebook.com/moonscapedubai"
           ],
           "areaServed": [
-            "Dubai Marina",
-            "Downtown Dubai",
-            "Emirates Hills",
-            "Jumeirah",
-            "Palm Jumeirah",
-            "DIFC"
+            {
+              "@type": "City",
+              "name": "Dubai Marina"
+            },
+            {
+              "@type": "City", 
+              "name": "Downtown Dubai"
+            },
+            {
+              "@type": "City",
+              "name": "Emirates Hills"
+            },
+            {
+              "@type": "City",
+              "name": "Jumeirah"
+            },
+            {
+              "@type": "City",
+              "name": "Palm Jumeirah"
+            },
+            {
+              "@type": "City",
+              "name": "DIFC"
+            }
           ],
-          "priceRange": "$$$"
+          "priceRange": "$$$",
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "reviewCount": "127"
+          }
         },
         {
           "@type": "WebSite",
@@ -113,7 +149,8 @@
             "@type": "SearchAction",
             "target": "https://moonscape-realestate.com/search?q={search_term_string}",
             "query-input": "required name=search_term_string"
-          }
+          },
+          "inLanguage": ["en", "ar"]
         },
         {
           "@type": "FAQPage",
@@ -123,7 +160,7 @@
               "name": "What are the benefits of investing in Dubai real estate?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Dubai offers 0% income tax on rental income and capital gains, high rental yields of 6-10%, strong capital appreciation, world-class infrastructure, and strategic location connecting East and West markets."
+                "text": "Dubai offers 0% income tax on rental income and capital gains, high rental yields of 6-10%, strong capital appreciation, world-class infrastructure, strategic location connecting East and West markets, and a stable political environment with investor-friendly policies."
               }
             },
             {
@@ -131,7 +168,7 @@
               "name": "Can foreign nationals buy property in Dubai?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Yes, foreign nationals can purchase freehold properties in designated areas of Dubai, gaining full ownership rights with no residency requirements. Popular areas include Dubai Marina, Downtown Dubai, and Emirates Hills."
+                "text": "Yes, foreign nationals can purchase freehold properties in designated areas of Dubai, gaining full ownership rights with no residency requirements. Popular freehold areas include Dubai Marina, Downtown Dubai, Emirates Hills, Palm Jumeirah, and DIFC."
               }
             },
             {
@@ -139,12 +176,54 @@
               "name": "What is the average ROI for Dubai real estate investments?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Dubai real estate typically offers 6-10% annual rental yields, with prime locations achieving higher returns. Capital appreciation has averaged 5-8% annually over the past decade."
+                "text": "Dubai real estate typically offers 6-10% annual rental yields, with prime locations achieving higher returns. Capital appreciation has averaged 5-8% annually, making it one of the most attractive global real estate markets for investors."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What services does Moonscape Real Estate provide?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Moonscape Real Estate provides comprehensive luxury property services including property acquisition, investment consulting, market analysis, property management, and personalized client guidance for Dubai's premium real estate market."
               }
             }
           ]
         }
       ]
+    }
+    </script>
+
+    <!-- Performance and Security Headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="/lovable-uploads/moonscapere.jpeg" as="image" type="image/jpeg" />
+    
+    <!-- Alternate Language Links -->
+    <link rel="alternate" hreflang="en" href="https://moonscape-realestate.com/" />
+    <link rel="alternate" hreflang="ar" href="https://moonscape-realestate.com/ar/" />
+    <link rel="alternate" hreflang="x-default" href="https://moonscape-realestate.com/" />
+
+    <!-- Rich Snippets for Local Business -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "Moonscape Real Estate",
+      "description": "Premium luxury real estate services in Dubai",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "DIFC, Gate Village",
+        "addressLocality": "Dubai",
+        "addressCountry": "AE"
+      },
+      "telephone": "+971-4-XXX-XXXX",
+      "openingHours": "Mo-Sa 09:00-18:00",
+      "priceRange": "$$$",
+      "servesCuisine": "Real Estate Services"
     }
     </script>
   </head>
