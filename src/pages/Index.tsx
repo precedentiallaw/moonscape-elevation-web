@@ -1,5 +1,5 @@
 import { useState, useEffect, lazy, Suspense } from "react";
-import { Search, ArrowDown, Play, Calendar } from "lucide-react";
+import { Search, ArrowDown, Play, Calendar, Phone, Mail, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MobileNavigation } from "@/components/MobileNavigation";
