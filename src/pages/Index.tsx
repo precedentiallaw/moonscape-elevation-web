@@ -1,5 +1,4 @@
-
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useMemo, Suspense, lazy } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -31,7 +30,12 @@ import {
 } from "lucide-react";
 import { MobileNavigation } from "@/components/MobileNavigation";
 import { PropertyGallery } from "@/components/PropertyGallery";
-import { VideoLoadingState, PropertyCardSkeleton } from "@/components/LoadingStates";
+import { PropertyFilter } from "@/components/PropertyFilter";
+import { VideoLoadingState, PropertyCardSkeleton, MobileOptimizedLoader } from "@/components/LoadingStates";
+import { useIsMobile } from "@/hooks/use-mobile";
+
+// Lazy load components for better performance
+const LazyPropertyGallery = lazy(() => import("@/components/PropertyGallery").then(module => ({ default: module.PropertyGallery })));
 
 const Index = () => {
   const [scrollY, setScrollY] = useState(0);
@@ -40,89 +44,119 @@ const Index = () => {
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [filteredProperties, setFilteredProperties] = useState<any[]>([]);
+  const [isFilterVisible, setIsFilterVisible] = useState(false);
+  const isMobile = useIsMobile();
 
-  useEffect(() => {
-    const handleScroll = () => {
+  // Optimized scroll handler with requestAnimationFrame
+  const handleScroll = useCallback(() => {
+    if (!window.requestAnimationFrame) return;
+    
+    window.requestAnimationFrame(() => {
       setScrollY(window.scrollY);
       
-      // Parallax effects
+      // Enhanced parallax with performance optimization
       const parallaxElements = document.querySelectorAll('.parallax-slow');
       parallaxElements.forEach((el) => {
-        const speed = 0.5;
-        const yPos = -(window.scrollY * speed) + 'px';
-        (el as HTMLElement).style.transform = `translateY(${yPos})`;
+        const speed = isMobile ? 0.3 : 0.5; // Reduced parallax on mobile
+        const yPos = -(window.scrollY * speed);
+        (el as HTMLElement).style.transform = `translateY(${yPos}px)`;
       });
+    });
+  }, [isMobile]);
+
+  // Intersection Observer for animations
+  const observerCallback = useCallback((entries: IntersectionObserverEntry[]) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("active");
+      }
+    });
+  }, []);
+
+  const staggerObserverCallback = useCallback((entries: IntersectionObserverEntry[]) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const staggerElements = entry.target.querySelectorAll('.reveal-stagger');
+        staggerElements.forEach((el, index) => {
+          setTimeout(() => {
+            el.classList.add("active");
+          }, index * 100); // Staggered animation
+        });
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    // Optimized scroll listener
+    let ticking = false;
+    const scrollHandler = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", scrollHandler, { passive: true });
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("active");
-          }
-        });
-      },
-      { threshold: 0.1, rootMargin: "50px" }
-    );
+    // Intersection observers with improved options
+    const observer = new IntersectionObserver(observerCallback, { 
+      threshold: 0.1, 
+      rootMargin: isMobile ? "30px" : "50px" 
+    });
 
-    // Enhanced stagger animations
-    const staggerObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const staggerElements = entry.target.querySelectorAll('.reveal-stagger');
-            staggerElements.forEach((el) => {
-              el.classList.add("active");
-            });
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
+    const staggerObserver = new IntersectionObserver(staggerObserverCallback, { 
+      threshold: 0.1,
+      rootMargin: isMobile ? "20px" : "30px"
+    });
 
+    // Observe elements
     document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
     document.querySelectorAll(".stagger-container").forEach((el) => staggerObserver.observe(el));
     
-    // Simulate loading state
-    setTimeout(() => setIsLoading(false), 1200);
+    // Optimized loading simulation
+    const loadingTimer = setTimeout(() => setIsLoading(false), isMobile ? 800 : 1200);
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", scrollHandler);
       observer.disconnect();
       staggerObserver.disconnect();
+      clearTimeout(loadingTimer);
     };
-  }, []);
+  }, [handleScroll, observerCallback, staggerObserverCallback, isMobile]);
 
-  const scrollToSection = (id: string) => {
+  // Performance optimized scroll function
+  const scrollToSection = useCallback((id: string) => {
     const element = document.getElementById(id);
     if (element) {
-      const offset = 80;
+      const offset = isMobile ? 60 : 80;
       const elementPosition = element.offsetTop - offset;
       window.scrollTo({
         top: elementPosition,
         behavior: "smooth",
       });
     }
-  };
+  }, [isMobile]);
 
-  const t = (en: string, ar: string) => (lang === "ar" ? ar : en);
+  const t = useCallback((en: string, ar: string) => (lang === "ar" ? ar : en), [lang]);
 
-  const navItems = [
+  const navItems = useMemo(() => [
     { label: t("Properties", "العقارات"), id: "properties" },
     { label: t("About", "حول"), id: "about" },
     { label: t("Dubai", "لماذا دبي"), id: "dubai" },
     { label: t("Contact", "اتصل بنا"), id: "contact" },
-  ];
+  ], [t]);
 
-  const propertyImages = [
+  const propertyImages = useMemo(() => [
     "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=600&fit=crop&q=80",
     "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&h=600&fit=crop&q=80",
     "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=800&h=600&fit=crop&q=80",
-  ];
+  ], []);
 
-  const properties = [
+  const properties = useMemo(() => [
     {
       title: t("Marina Collection", "مجموعة المارينا"),
       area: t("Dubai Marina", "دبي مارينا"),
@@ -165,32 +199,61 @@ const Index = () => {
       status: t("Exclusive", "حصري"),
       roi: "7.8%"
     }
-  ];
+  ], [t, propertyImages]);
 
-  const openGallery = (property: any) => {
+  // Initialize filtered properties
+  useEffect(() => {
+    setFilteredProperties(properties);
+  }, [properties]);
+
+  const openGallery = useCallback((property: any) => {
     setSelectedProperty(property);
     setGalleryOpen(true);
-  };
+  }, []);
+
+  const handleFilterChange = useCallback((filters: any) => {
+    // Filter logic implementation
+    let filtered = properties;
+    
+    if (filters.search) {
+      filtered = filtered.filter(property => 
+        property.title.toLowerCase().includes(filters.search.toLowerCase()) ||
+        property.area.toLowerCase().includes(filters.search.toLowerCase())
+      );
+    }
+    
+    if (filters.location) {
+      filtered = filtered.filter(property => 
+        property.area.includes(filters.location)
+      );
+    }
+    
+    setFilteredProperties(filtered);
+  }, [properties]);
+
+  // Show loading screen
+  if (isLoading) {
+    return <MobileOptimizedLoader />;
+  }
 
   return (
     <div className={`min-h-screen ${lang === "ar" ? "rtl text-right" : ""} gpu-layer`}>
-      {/* Enhanced Header */}
       <header className={`fixed top-0 w-full z-50 transition-all duration-500 ${
         scrollY > 50 
           ? 'bg-white/95 backdrop-blur-xl border-b border-slate-200/50 shadow-lg' 
           : 'bg-white/80 backdrop-blur-md border-b border-transparent'
       }`}>
-        <div className="container mx-auto px-6 py-4 flex items-center justify-between max-w-7xl">
-          <div className="text-2xl font-serif font-light text-slate-900 tracking-wide hover-scale-subtle cursor-pointer">
+        <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between max-w-7xl">
+          <div className="text-xl sm:text-2xl font-serif font-light text-slate-900 tracking-wide hover-scale-subtle cursor-pointer">
             <span className="text-gradient-gold">Moon</span>scape
           </div>
           
-          <nav className="hidden md:flex space-x-8">
+          <nav className="hidden md:flex space-x-6 lg:space-x-8">
             {navItems.map((item, index) => (
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className={`nav-link-premium reveal-stagger`}
+                className={`nav-link-premium reveal-stagger text-sm md:text-base`}
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 {item.label}
@@ -198,12 +261,12 @@ const Index = () => {
             ))}
           </nav>
           
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setLang(lang === "en" ? "ar" : "en")}
-              className="hidden md:flex text-sm font-medium hover-scale-subtle"
+              className="hidden md:flex text-sm font-medium hover-scale-subtle px-3 py-2"
             >
               {lang === "en" ? "العربية" : "English"}
             </Button>
@@ -218,7 +281,6 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Enhanced Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         {!videoLoaded && <VideoLoadingState />}
         
@@ -228,6 +290,7 @@ const Index = () => {
           loop
           muted
           playsInline
+          preload={isMobile ? "metadata" : "auto"}
           onLoadedData={() => setVideoLoaded(true)}
           poster="https://images.unsplash.com/photo-1518005020951-eccb494ad742?w=1920&h=1080&fit=crop&q=80"
         >
@@ -239,9 +302,9 @@ const Index = () => {
         
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
         
-        <div className="text-center z-10 px-6 max-w-6xl">
+        <div className="text-center z-10 px-4 sm:px-6 max-w-6xl">
           <div className="reveal fade-in-up">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-light mb-8 text-white leading-[1.1] tracking-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-light mb-6 sm:mb-8 text-white leading-[1.1] tracking-tight">
               {t("Luxury Living in the", "العيش الفاخر في")} <br />
               <span className="text-gradient-gold inline-block float-animation">
                 {t("Heart of Dubai", "قلب دبي")}
@@ -250,7 +313,7 @@ const Index = () => {
           </div>
           
           <div className="reveal slide-in-left" style={{ animationDelay: '0.3s' }}>
-            <p className="text-xl md:text-2xl text-white/95 mb-12 font-light max-w-4xl mx-auto leading-relaxed">
+            <p className="text-lg sm:text-xl md:text-2xl text-white/95 mb-8 sm:mb-12 font-light max-w-4xl mx-auto leading-relaxed">
               {t(
                 "Where architectural excellence meets unparalleled lifestyle",
                 "حيث يلتقي التميز المعماري بأسلوب الحياة الذي لا مثيل له"
@@ -258,9 +321,9 @@ const Index = () => {
             </p>
           </div>
           
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center reveal zoom-in-subtle" style={{ animationDelay: '0.6s' }}>
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center reveal zoom-in-subtle" style={{ animationDelay: '0.6s' }}>
             <Button
-              className="btn-premium group"
+              className="btn-premium group w-full sm:w-auto min-h-[48px] px-6 sm:px-8"
               onClick={() => scrollToSection("properties")}
             >
               <Sparkles className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-300" />
@@ -269,7 +332,7 @@ const Index = () => {
             
             <Button
               variant="outline"
-              className="btn-secondary-premium group"
+              className="btn-secondary-premium group w-full sm:w-auto min-h-[48px] px-6 sm:px-8"
               onClick={() => scrollToSection("contact")}
             >
               <Phone className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" />
@@ -278,12 +341,11 @@ const Index = () => {
           </div>
         </div>
         
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <ArrowDown className="w-6 h-6 text-white/80" />
+        <div className="absolute bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <ArrowDown className="w-5 h-5 sm:w-6 sm:h-6 text-white/80" />
         </div>
       </section>
 
-      {/* Enhanced Trust Signals */}
       <section className="py-24 bg-gradient-to-b from-slate-50 via-white to-slate-50">
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="text-center mb-16 reveal">
@@ -346,86 +408,92 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Enhanced Properties Section */}
-      <section id="properties" className="py-28 bg-white">
-        <div className="container mx-auto px-6 max-w-7xl">
-          <div className="text-center mb-24 reveal">
-            <h2 className="text-4xl md:text-5xl font-serif font-light mb-6 text-slate-900 tracking-tight">
+      <section id="properties" className="py-16 sm:py-20 md:py-28 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
+          <div className="text-center mb-12 sm:mb-16 md:mb-24 reveal">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-light mb-4 sm:mb-6 text-slate-900 tracking-tight">
               {t("Exceptional Properties", "عقارات استثنائية")}
             </h2>
-            <div className="section-divider w-32 mx-auto mb-8"></div>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+            <div className="section-divider w-24 sm:w-32 mx-auto mb-6 sm:mb-8"></div>
+            <p className="text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
               {t("Curated collection of Dubai's most prestigious addresses", "مجموعة مختارة من أرقى العناوين في دبي")}
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-12 stagger-container">
+          <div className="mb-8 sm:mb-12 reveal">
+            <PropertyFilter 
+              onFilterChange={handleFilterChange}
+              className="max-w-4xl mx-auto"
+            />
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 lg:gap-12 stagger-container">
             {isLoading ? (
               Array.from({ length: 3 }).map((_, index) => (
                 <PropertyCardSkeleton key={index} />
               ))
             ) : (
-              properties.map((property, index) => (
+              filteredProperties.map((property, index) => (
                 <Card key={index} className="group overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-700 reveal-stagger card-premium bg-white">
-                  <div className="relative h-80 overflow-hidden image-premium">
+                  <div className="relative h-60 sm:h-64 md:h-80 overflow-hidden image-premium">
                     <img
                       src={property.image}
                       alt={`${property.title} - ${property.area}`}
                       className="w-full h-full object-cover transition-transform duration-700"
                       loading="lazy"
                     />
-                    <div className="absolute top-4 left-4 flex gap-2">
-                      <span className="bg-amber-600 text-white px-3 py-1 rounded-full text-sm font-medium pulse-glow">
+                    <div className="absolute top-3 sm:top-4 left-3 sm:left-4 flex gap-2">
+                      <span className="bg-amber-600 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium pulse-glow">
                         {property.status}
                       </span>
-                      <span className="bg-emerald-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                      <span className="bg-emerald-600 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium">
                         {property.roi} ROI
                       </span>
                     </div>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500">
-                      <div className="absolute bottom-4 right-4 flex gap-2">
+                      <div className="absolute bottom-3 sm:bottom-4 right-3 sm:right-4 flex gap-2">
                         <Button
                           size="sm"
                           variant="secondary"
                           onClick={() => openGallery(property)}
-                          className="bg-white/95 text-slate-900 hover:bg-white backdrop-blur-md hover-scale-subtle"
+                          className="bg-white/95 text-slate-900 hover:bg-white backdrop-blur-md hover-scale-subtle text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2"
                         >
-                          <Eye className="w-4 h-4 mr-1" />
+                          <Eye className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
                           {t("Gallery", "معرض")}
                         </Button>
                       </div>
                     </div>
                   </div>
                   
-                  <CardContent className="p-8">
-                    <div className="flex items-center gap-2 mb-4">
-                      <MapPin className="w-4 h-4 text-slate-400" />
-                      <span className="text-sm text-slate-500 font-medium tracking-wide">
+                  <CardContent className="p-4 sm:p-6 md:p-8">
+                    <div className="flex items-center gap-2 mb-3 sm:mb-4">
+                      <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-slate-400" />
+                      <span className="text-xs sm:text-sm text-slate-500 font-medium tracking-wide">
                         {property.area}
                       </span>
                     </div>
                     
-                    <h3 className="text-2xl font-serif font-medium mb-3 text-slate-900 tracking-tight hover:text-amber-600 transition-colors duration-300">
+                    <h3 className="text-lg sm:text-xl md:text-2xl font-serif font-medium mb-2 sm:mb-3 text-slate-900 tracking-tight hover:text-amber-600 transition-colors duration-300">
                       {property.title}
                     </h3>
                     
-                    <p className="text-2xl font-bold text-gradient-gold mb-6">
+                    <p className="text-xl sm:text-2xl font-bold text-gradient-gold mb-4 sm:mb-6">
                       {property.price}
                     </p>
                     
-                    <div className="space-y-3 mb-8">
-                      {property.features.map((feature, i) => (
-                        <div key={i} className="flex items-center text-sm group/feature">
-                          <CheckCircle className="w-4 h-4 text-emerald-500 mr-3 flex-shrink-0 group-hover/feature:scale-110 transition-transform duration-200" />
+                    <div className="space-y-2 sm:space-y-3 mb-6 sm:mb-8">
+                      {property.features.map((feature: string, i: number) => (
+                        <div key={i} className="flex items-center text-xs sm:text-sm group/feature">
+                          <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-emerald-500 mr-2 sm:mr-3 flex-shrink-0 group-hover/feature:scale-110 transition-transform duration-200" />
                           <span className="text-slate-600">{feature}</span>
                         </div>
                       ))}
                     </div>
                     
-                    <div className="flex gap-3">
+                    <div className="flex gap-2 sm:gap-3">
                       <Button 
                         variant="outline" 
-                        className="flex-1 font-medium tracking-wide hover:bg-slate-50 transition-colors duration-200 hover-scale-subtle"
+                        className="flex-1 font-medium tracking-wide hover:bg-slate-50 transition-colors duration-200 hover-scale-subtle text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-3"
                         onClick={() => scrollToSection("contact")}
                       >
                         {t("Schedule Viewing", "حدد موعد المعاينة")}
@@ -434,9 +502,9 @@ const Index = () => {
                         size="sm"
                         variant="ghost"
                         onClick={() => openGallery(property)}
-                        className="px-3 hover-scale-subtle"
+                        className="px-2 sm:px-3 hover-scale-subtle"
                       >
-                        <Eye className="w-4 h-4" />
+                        <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
                       </Button>
                     </div>
                   </CardContent>
@@ -447,7 +515,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Enhanced About Section */}
       <section id="about" className="py-28 bg-gradient-to-b from-slate-50 to-white">
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="grid lg:grid-cols-2 gap-20 lg:gap-24 items-center">
@@ -502,7 +569,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Enhanced Why Dubai Section */}
       <section id="dubai" className="py-28 bg-white">
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="text-center mb-24 reveal">
@@ -577,7 +643,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Enhanced Contact Section */}
       <section id="contact" className="py-28 bg-gradient-to-b from-slate-50 to-white">
         <div className="container mx-auto px-6 max-w-5xl">
           <div className="text-center mb-24 reveal">
@@ -683,7 +748,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Enhanced Footer */}
       <footer className="py-24 bg-gradient-to-b from-slate-900 to-slate-800 text-white">
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="grid md:grid-cols-4 gap-12 mb-16">
@@ -776,14 +840,16 @@ const Index = () => {
         </div>
       </footer>
 
-      {/* Property Gallery Modal */}
+      {/* Property Gallery Modal with Suspense */}
       {selectedProperty && (
-        <PropertyGallery
-          images={selectedProperty.gallery}
-          title={selectedProperty.title}
-          isOpen={galleryOpen}
-          onClose={() => setGalleryOpen(false)}
-        />
+        <Suspense fallback={<div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div></div>}>
+          <LazyPropertyGallery
+            images={selectedProperty.gallery}
+            title={selectedProperty.title}
+            isOpen={galleryOpen}
+            onClose={() => setGalleryOpen(false)}
+          />
+        </Suspense>
       )}
     </div>
   );
