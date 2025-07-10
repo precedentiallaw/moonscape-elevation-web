@@ -24,6 +24,10 @@ import {
   MapPin,
   Calendar,
   Eye,
+  Sparkles,
+  Home,
+  Building2,
+  Users,
 } from "lucide-react";
 import { MobileNavigation } from "@/components/MobileNavigation";
 import { PropertyGallery } from "@/components/PropertyGallery";
@@ -38,7 +42,18 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+      
+      // Parallax effects
+      const parallaxElements = document.querySelectorAll('.parallax-slow');
+      parallaxElements.forEach((el) => {
+        const speed = 0.5;
+        const yPos = -(window.scrollY * speed) + 'px';
+        (el as HTMLElement).style.transform = `translateY(${yPos})`;
+      });
+    };
+
     window.addEventListener("scroll", handleScroll);
 
     const observer = new IntersectionObserver(
@@ -49,25 +64,47 @@ const Index = () => {
           }
         });
       },
+      { threshold: 0.1, rootMargin: "50px" }
+    );
+
+    // Enhanced stagger animations
+    const staggerObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const staggerElements = entry.target.querySelectorAll('.reveal-stagger');
+            staggerElements.forEach((el) => {
+              el.classList.add("active");
+            });
+          }
+        });
+      },
       { threshold: 0.1 }
     );
 
     document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+    document.querySelectorAll(".stagger-container").forEach((el) => staggerObserver.observe(el));
     
     // Simulate loading state
-    setTimeout(() => setIsLoading(false), 1000);
+    setTimeout(() => setIsLoading(false), 1200);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
       observer.disconnect();
+      staggerObserver.disconnect();
     };
   }, []);
 
   const scrollToSection = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
+    const element = document.getElementById(id);
+    if (element) {
+      const offset = 80;
+      const elementPosition = element.offsetTop - offset;
+      window.scrollTo({
+        top: elementPosition,
+        behavior: "smooth",
+      });
+    }
   };
 
   const t = (en: string, ar: string) => (lang === "ar" ? ar : en);
@@ -97,7 +134,8 @@ const Index = () => {
         t("World-Class Amenities", "وسائل راحة عالمية")
       ],
       gallery: propertyImages,
-      status: t("Coming Soon", "قريباً")
+      status: t("Coming Soon", "قريباً"),
+      roi: "8.2%"
     },
     {
       title: t("Downtown Residences", "شقق وسط المدينة"),
@@ -110,7 +148,8 @@ const Index = () => {
         t("Investment Grade", "فرصة استثمارية")
       ],
       gallery: propertyImages,
-      status: t("Pre-Launch", "ما قبل الإطلاق")
+      status: t("Pre-Launch", "ما قبل الإطلاق"),
+      roi: "9.1%"
     },
     {
       title: t("Emirates Collection", "مجموعة الإمارات"),
@@ -123,7 +162,8 @@ const Index = () => {
         t("Exclusive Community", "مجتمع حصري")
       ],
       gallery: propertyImages,
-      status: t("Exclusive", "حصري")
+      status: t("Exclusive", "حصري"),
+      roi: "7.8%"
     }
   ];
 
@@ -133,23 +173,27 @@ const Index = () => {
   };
 
   return (
-    <div className={`min-h-screen ${lang === "ar" ? "rtl text-right" : ""}`}>
-      {/* Header */}
-      <header className="fixed top-0 w-full z-40 bg-white/95 backdrop-blur-sm border-b border-slate-100 transition-all duration-300">
+    <div className={`min-h-screen ${lang === "ar" ? "rtl text-right" : ""} gpu-layer`}>
+      {/* Enhanced Header */}
+      <header className={`fixed top-0 w-full z-50 transition-all duration-500 ${
+        scrollY > 50 
+          ? 'bg-white/95 backdrop-blur-xl border-b border-slate-200/50 shadow-lg' 
+          : 'bg-white/80 backdrop-blur-md border-b border-transparent'
+      }`}>
         <div className="container mx-auto px-6 py-4 flex items-center justify-between max-w-7xl">
-          <div className="text-2xl font-serif font-light text-slate-900 tracking-wide">
-            Moonscape
+          <div className="text-2xl font-serif font-light text-slate-900 tracking-wide hover-scale-subtle cursor-pointer">
+            <span className="text-gradient-gold">Moon</span>scape
           </div>
           
           <nav className="hidden md:flex space-x-8">
-            {navItems.map((item) => (
+            {navItems.map((item, index) => (
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className="text-slate-600 hover:text-slate-900 text-sm font-medium tracking-wide transition-colors duration-200 relative group"
+                className={`nav-link-premium reveal-stagger`}
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
                 {item.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-amber-600 transition-all duration-300 group-hover:w-full"></span>
               </button>
             ))}
           </nav>
@@ -159,7 +203,7 @@ const Index = () => {
               variant="ghost"
               size="sm"
               onClick={() => setLang(lang === "en" ? "ar" : "en")}
-              className="hidden md:flex text-sm font-medium"
+              className="hidden md:flex text-sm font-medium hover-scale-subtle"
             >
               {lang === "en" ? "العربية" : "English"}
             </Button>
@@ -174,12 +218,12 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Hero Section */}
+      {/* Enhanced Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         {!videoLoaded && <VideoLoadingState />}
         
         <video
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover parallax-slow"
           autoPlay
           loop
           muted
@@ -193,63 +237,107 @@ const Index = () => {
           />
         </video>
         
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/50" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
         
-        <div className="text-center z-10 px-6 max-w-5xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-light mb-6 text-white leading-[1.1] tracking-tight reveal">
-            {t("Luxury Living in the", "العيش الفاخر في")} <br />
-            <span className="text-amber-400 font-light">{t("Heart of Dubai", "قلب دبي")}</span>
-          </h1>
+        <div className="text-center z-10 px-6 max-w-6xl">
+          <div className="reveal fade-in-up">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-light mb-8 text-white leading-[1.1] tracking-tight">
+              {t("Luxury Living in the", "العيش الفاخر في")} <br />
+              <span className="text-gradient-gold inline-block float-animation">
+                {t("Heart of Dubai", "قلب دبي")}
+              </span>
+            </h1>
+          </div>
           
-          <p className="text-xl md:text-2xl text-white/90 mb-10 font-light max-w-3xl mx-auto leading-relaxed reveal">
-            {t(
-              "A new standard in property development",
-              "معيار جديد في تطوير العقارات"
-            )}
-          </p>
+          <div className="reveal slide-in-left" style={{ animationDelay: '0.3s' }}>
+            <p className="text-xl md:text-2xl text-white/95 mb-12 font-light max-w-4xl mx-auto leading-relaxed">
+              {t(
+                "Where architectural excellence meets unparalleled lifestyle",
+                "حيث يلتقي التميز المعماري بأسلوب الحياة الذي لا مثيل له"
+              )}
+            </p>
+          </div>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center reveal">
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center reveal zoom-in-subtle" style={{ animationDelay: '0.6s' }}>
             <Button
-              className="bg-white text-slate-900 hover:bg-slate-50 font-medium px-10 py-4 text-base tracking-wide rounded-full transition-all duration-300 hover:scale-105 shadow-lg"
+              className="btn-premium group"
               onClick={() => scrollToSection("properties")}
             >
-              {t("View Properties", "عرض العقارات")}
+              <Sparkles className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-300" />
+              {t("Explore Properties", "استكشف العقارات")}
             </Button>
             
             <Button
               variant="outline"
-              className="border-white/40 text-white hover:bg-white hover:text-slate-900 px-10 py-4 text-base tracking-wide backdrop-blur-sm rounded-full transition-all duration-300 hover:scale-105"
+              className="btn-secondary-premium group"
               onClick={() => scrollToSection("contact")}
             >
-              <Phone className="w-5 h-5 mr-2" />
-              {t("Contact Us", "اتصل بنا")}
+              <Phone className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" />
+              {t("Schedule Viewing", "حدد موعد المعاينة")}
             </Button>
           </div>
         </div>
         
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <ArrowDown className="w-5 h-5 text-white/70" />
+          <ArrowDown className="w-6 h-6 text-white/80" />
         </div>
       </section>
 
-      {/* Trust Signals */}
-      <section className="py-20 bg-gradient-to-b from-slate-50 to-white">
+      {/* Enhanced Trust Signals */}
+      <section className="py-24 bg-gradient-to-b from-slate-50 via-white to-slate-50">
         <div className="container mx-auto px-6 max-w-7xl">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+          <div className="text-center mb-16 reveal">
+            <h2 className="text-3xl md:text-4xl font-serif font-light mb-4 text-slate-900">
+              {t("Trusted Excellence", "التميز الموثوق")}
+            </h2>
+            <div className="section-divider w-24 mx-auto"></div>
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 stagger-container">
             {[
-              { icon: Award, label: t("Industry Recognition", "الاعتراف الصناعي"), desc: t("Award-winning developments", "مشاريع حائزة على جوائز"), color: "text-amber-600" },
-              { icon: Shield, label: t("RERA Licensed", "مرخص من قبل RERA"), desc: t("Fully regulated & compliant", "متوافق ومنظم بالكامل"), color: "text-blue-600" },
-              { icon: Star, label: t("Client Excellence", "تميز العملاء"), desc: t("5-star service standards", "معايير خدمة 5 نجوم"), color: "text-emerald-600" },
-              { icon: TrendingUp, label: t("Market Leadership", "الريادة السوقية"), desc: t("Proven track record", "سجل حافل بالإنجازات"), color: "text-purple-600" }
+              { 
+                icon: Award, 
+                label: t("Industry Recognition", "الاعتراف الصناعي"), 
+                desc: t("Award-winning developments", "مشاريع حائزة على جوائز"), 
+                color: "text-amber-600",
+                metric: "15+",
+                subtext: t("Awards", "جوائز")
+              },
+              { 
+                icon: Shield, 
+                label: t("RERA Licensed", "مرخص من قبل RERA"), 
+                desc: t("Fully regulated & compliant", "متوافق ومنظم بالكامل"), 
+                color: "text-blue-600",
+                metric: "100%",
+                subtext: t("Compliant", "متوافق")
+              },
+              { 
+                icon: Star, 
+                label: t("Client Excellence", "تميز العملاء"), 
+                desc: t("5-star service standards", "معايير خدمة 5 نجوم"), 
+                color: "text-emerald-600",
+                metric: "4.9★",
+                subtext: t("Rating", "تقييم")
+              },
+              { 
+                icon: TrendingUp, 
+                label: t("Market Leadership", "الريادة السوقية"), 
+                desc: t("Proven track record", "سجل حافل بالإنجازات"), 
+                color: "text-purple-600",
+                metric: "2024",
+                subtext: t("Since", "منذ")
+              }
             ].map((item, index) => (
-              <div key={index} className="text-center group hover:scale-105 transition-transform duration-300 reveal">
-                <div className={`w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center mx-auto mb-6 group-hover:shadow-lg transition-shadow duration-300`}>
-                  <item.icon className={`w-8 h-8 ${item.color}`} />
+              <div key={index} className="text-center group hover-lift-premium reveal-stagger card-premium p-8">
+                <div className={`w-20 h-20 rounded-full bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center mx-auto mb-6 group-hover:shadow-lg transition-all duration-300 ${item.color}`}>
+                  <item.icon className={`w-10 h-10 ${item.color}`} />
                 </div>
+                <div className={`text-2xl font-bold ${item.color} mb-2`}>{item.metric}</div>
+                <div className="text-xs text-slate-500 uppercase tracking-wider mb-4">{item.subtext}</div>
                 <h4 className="font-serif font-medium text-slate-900 mb-3 text-lg tracking-wide">
                   {item.label}
                 </h4>
-                <p className="text-slate-600 leading-relaxed">
+                <p className="text-slate-600 leading-relaxed text-sm">
                   {item.desc}
                 </p>
               </div>
@@ -258,73 +346,77 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Properties Preview */}
-      <section id="properties" className="py-24 bg-white">
+      {/* Enhanced Properties Section */}
+      <section id="properties" className="py-28 bg-white">
         <div className="container mx-auto px-6 max-w-7xl">
-          <div className="text-center mb-20 reveal">
+          <div className="text-center mb-24 reveal">
             <h2 className="text-4xl md:text-5xl font-serif font-light mb-6 text-slate-900 tracking-tight">
               {t("Exceptional Properties", "عقارات استثنائية")}
             </h2>
+            <div className="section-divider w-32 mx-auto mb-8"></div>
             <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
               {t("Curated collection of Dubai's most prestigious addresses", "مجموعة مختارة من أرقى العناوين في دبي")}
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-12 stagger-container">
             {isLoading ? (
               Array.from({ length: 3 }).map((_, index) => (
                 <PropertyCardSkeleton key={index} />
               ))
             ) : (
               properties.map((property, index) => (
-                <Card key={index} className="group overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-500 reveal bg-white">
-                  <div className="relative h-72 overflow-hidden">
+                <Card key={index} className="group overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-700 reveal-stagger card-premium bg-white">
+                  <div className="relative h-80 overflow-hidden image-premium">
                     <img
                       src={property.image}
                       alt={`${property.title} - ${property.area}`}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      className="w-full h-full object-cover transition-transform duration-700"
                       loading="lazy"
                     />
-                    <div className="absolute top-4 left-4">
-                      <span className="bg-amber-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                    <div className="absolute top-4 left-4 flex gap-2">
+                      <span className="bg-amber-600 text-white px-3 py-1 rounded-full text-sm font-medium pulse-glow">
                         {property.status}
                       </span>
+                      <span className="bg-emerald-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                        {property.roi} ROI
+                      </span>
                     </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500">
                       <div className="absolute bottom-4 right-4 flex gap-2">
                         <Button
                           size="sm"
                           variant="secondary"
                           onClick={() => openGallery(property)}
-                          className="bg-white/90 text-slate-900 hover:bg-white backdrop-blur-sm"
+                          className="bg-white/95 text-slate-900 hover:bg-white backdrop-blur-md hover-scale-subtle"
                         >
                           <Eye className="w-4 h-4 mr-1" />
-                          {t("View", "عرض")}
+                          {t("Gallery", "معرض")}
                         </Button>
                       </div>
                     </div>
                   </div>
                   
                   <CardContent className="p-8">
-                    <div className="flex items-center gap-2 mb-3">
+                    <div className="flex items-center gap-2 mb-4">
                       <MapPin className="w-4 h-4 text-slate-400" />
                       <span className="text-sm text-slate-500 font-medium tracking-wide">
                         {property.area}
                       </span>
                     </div>
                     
-                    <h3 className="text-2xl font-serif font-medium mb-2 text-slate-900 tracking-tight">
+                    <h3 className="text-2xl font-serif font-medium mb-3 text-slate-900 tracking-tight hover:text-amber-600 transition-colors duration-300">
                       {property.title}
                     </h3>
                     
-                    <p className="text-xl font-medium text-amber-600 mb-6">
+                    <p className="text-2xl font-bold text-gradient-gold mb-6">
                       {property.price}
                     </p>
                     
                     <div className="space-y-3 mb-8">
                       {property.features.map((feature, i) => (
-                        <div key={i} className="flex items-center text-sm">
-                          <CheckCircle className="w-4 h-4 text-emerald-500 mr-3 flex-shrink-0" />
+                        <div key={i} className="flex items-center text-sm group/feature">
+                          <CheckCircle className="w-4 h-4 text-emerald-500 mr-3 flex-shrink-0 group-hover/feature:scale-110 transition-transform duration-200" />
                           <span className="text-slate-600">{feature}</span>
                         </div>
                       ))}
@@ -333,16 +425,16 @@ const Index = () => {
                     <div className="flex gap-3">
                       <Button 
                         variant="outline" 
-                        className="flex-1 font-medium tracking-wide hover:bg-slate-50 transition-colors duration-200"
+                        className="flex-1 font-medium tracking-wide hover:bg-slate-50 transition-colors duration-200 hover-scale-subtle"
                         onClick={() => scrollToSection("contact")}
                       >
-                        {t("Learn More", "المزيد")}
+                        {t("Schedule Viewing", "حدد موعد المعاينة")}
                       </Button>
                       <Button 
                         size="sm"
                         variant="ghost"
                         onClick={() => openGallery(property)}
-                        className="px-3"
+                        className="px-3 hover-scale-subtle"
                       >
                         <Eye className="w-4 h-4" />
                       </Button>
@@ -355,15 +447,17 @@ const Index = () => {
         </div>
       </section>
 
-      {/* About Section */}
-      <section id="about" className="py-24 bg-gradient-to-b from-slate-50 to-white">
+      {/* Enhanced About Section */}
+      <section id="about" className="py-28 bg-gradient-to-b from-slate-50 to-white">
         <div className="container mx-auto px-6 max-w-7xl">
-          <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-center">
-            <div className="reveal">
+          <div className="grid lg:grid-cols-2 gap-20 lg:gap-24 items-center">
+            <div className="reveal slide-in-left">
               <h2 className="text-4xl md:text-5xl font-serif font-light mb-8 text-slate-900 tracking-tight leading-[1.1]">
-                {t("Iconic Properties,", "عقارات مميزة،")}<br />
-                <span className="text-amber-600">{t("Visionary Living", "أسلوب حياة رؤيوي")}</span>
+                {t("Visionary", "رؤيوي")}<br />
+                <span className="text-gradient-gold">{t("Real Estate", "العقارات")}</span>
               </h2>
+              
+              <div className="section-divider w-16 mb-8"></div>
               
               <p className="text-xl text-slate-600 mb-10 leading-relaxed">
                 {t(
@@ -372,44 +466,50 @@ const Index = () => {
                 )}
               </p>
               
-              <div className="grid grid-cols-2 gap-12 mb-10">
-                <div className="text-center">
-                  <h4 className="text-3xl font-serif font-light text-slate-900 mb-2 tracking-tight">2024</h4>
-                  <p className="text-slate-600 text-sm tracking-wide uppercase">{t("Established", "تأسست")}</p>
-                </div>
-                <div className="text-center">
-                  <h4 className="text-3xl font-serif font-light text-slate-900 mb-2 tracking-tight">{t("Premium", "فاخر")}</h4>
-                  <p className="text-slate-600 text-sm tracking-wide uppercase">{t("Focus", "التركيز")}</p>
-                </div>
+              <div className="grid grid-cols-3 gap-8 mb-12 stagger-container">
+                {[
+                  { icon: Home, metric: "500+", label: t("Properties", "عقارات") },
+                  { icon: Building2, metric: "50+", label: t("Projects", "مشاريع") },
+                  { icon: Users, metric: "1000+", label: t("Clients", "عملاء") }
+                ].map((stat, index) => (
+                  <div key={index} className="text-center reveal-stagger">
+                    <stat.icon className="w-8 h-8 text-amber-600 mx-auto mb-3" />
+                    <div className="text-2xl font-bold text-slate-900 mb-1">{stat.metric}</div>
+                    <div className="text-sm text-slate-500 uppercase tracking-wider">{stat.label}</div>
+                  </div>
+                ))}
               </div>
               
-              <Button className="bg-slate-900 hover:bg-slate-800 text-white px-10 py-4 text-base font-medium tracking-wide rounded-full transition-all duration-300 hover:scale-105">
+              <Button className="btn-premium group">
+                <Award className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-300" />
                 {t("Our Story", "قصتنا")}
               </Button>
             </div>
             
-            <div className="relative reveal">
-              <div className="relative overflow-hidden rounded-2xl">
+            <div className="relative reveal slide-in-right">
+              <div className="relative overflow-hidden rounded-2xl image-premium">
                 <img
                   src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&h=500&fit=crop&q=80"
                   alt="Modern Dubai architecture"
-                  className="w-full h-auto transition-transform duration-700 hover:scale-105"
+                  className="w-full h-auto"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
               </div>
+              <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl opacity-20 float-animation"></div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Why Dubai */}
-      <section id="dubai" className="py-24 bg-white">
+      {/* Enhanced Why Dubai Section */}
+      <section id="dubai" className="py-28 bg-white">
         <div className="container mx-auto px-6 max-w-7xl">
-          <div className="text-center mb-20 reveal">
+          <div className="text-center mb-24 reveal">
             <h2 className="text-4xl md:text-5xl font-serif font-light mb-6 text-slate-900 tracking-tight">
               {t("Why Dubai", "لماذا دبي")}
             </h2>
+            <div className="section-divider w-32 mx-auto mb-8"></div>
             <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
               {t(
                 "A global destination offering unmatched investment returns and lifestyle opportunities",
@@ -418,18 +518,56 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 stagger-container">
             {[
-              { stat: "0%", label: t("Capital Gains Tax", "ضريبة الأرباح"), desc: t("Tax-free environment for property investments", "بيئة خالية من الضرائب للاستثمار العقاري"), color: "text-emerald-600" },
-              { stat: "6–10%", label: t("Annual Yields", "عوائد سنوية"), desc: t("Strong rental returns across prime locations", "عوائد إيجارية قوية في مواقع متميزة"), color: "text-blue-600" },
-              { stat: t("Global", "عالمية"), label: t("Connectivity", "الربط العالمي"), desc: t("Strategic location connecting major markets", "موقع استراتيجي يربط بين الأسواق الكبرى"), color: "text-purple-600" },
-              { stat: t("Stable", "مستقرة"), label: t("Economy", "اقتصاد"), desc: t("Robust foundation with continuous growth", "أساس قوي ونمو مستمر"), color: "text-amber-600" },
-              { stat: "200+", label: t("Nationalities", "جنسيات"), desc: t("Truly international business environment", "بيئة أعمال دولية بحق"), color: "text-rose-600" },
-              { stat: "2030", label: t("Vision", "رؤية"), desc: t("Ambitious development goals and infrastructure", "أهداف تنموية طموحة وبنية تحتية متميزة"), color: "text-indigo-600" }
+              { 
+                stat: "0%", 
+                label: t("Capital Gains Tax", "ضريبة الأرباح"), 
+                desc: t("Tax-free environment for property investments", "بيئة خالية من الضرائب للاستثمار العقاري"), 
+                color: "text-emerald-600",
+                bgColor: "from-emerald-50 to-emerald-100"
+              },
+              { 
+                stat: "6–10%", 
+                label: t("Annual Yields", "عوائد سنوية"), 
+                desc: t("Strong rental returns across prime locations", "عوائد إيجارية قوية في مواقع متميزة"), 
+                color: "text-blue-600",
+                bgColor: "from-blue-50 to-blue-100"
+              },
+              { 
+                stat: t("Global", "عالمية"), 
+                label: t("Connectivity", "الربط العالمي"), 
+                desc: t("Strategic location connecting major markets", "موقع استراتيجي يربط بين الأسواق الكبرى"), 
+                color: "text-purple-600",
+                bgColor: "from-purple-50 to-purple-100"
+              },
+              { 
+                stat: t("Stable", "مستقرة"), 
+                label: t("Economy", "اقتصاد"), 
+                desc: t("Robust foundation with continuous growth", "أساس قوي ونمو مستمر"), 
+                color: "text-amber-600",
+                bgColor: "from-amber-50 to-amber-100"
+              },
+              { 
+                stat: "200+", 
+                label: t("Nationalities", "جنسيات"), 
+                desc: t("Truly international business environment", "بيئة أعمال دولية بحق"), 
+                color: "text-rose-600",
+                bgColor: "from-rose-50 to-rose-100"
+              },
+              { 
+                stat: "2030", 
+                label: t("Vision", "رؤية"), 
+                desc: t("Ambitious development goals and infrastructure", "أهداف تنموية طموحة وبنية تحتية متميزة"), 
+                color: "text-indigo-600",
+                bgColor: "from-indigo-50 to-indigo-100"
+              }
             ].map((item, index) => (
-              <Card key={index} className="p-8 text-center border-0 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 reveal bg-white">
+              <Card key={index} className={`p-8 text-center border-0 shadow-lg hover:shadow-xl transition-all duration-500 hover-lift-premium reveal-stagger card-premium bg-gradient-to-br ${item.bgColor}`}>
                 <CardContent className="p-0">
-                  <h3 className={`text-4xl font-serif font-light mb-4 ${item.color} tracking-tight`}>{item.stat}</h3>
+                  <div className={`text-4xl font-serif font-light mb-4 ${item.color} tracking-tight`}>
+                    {item.stat}
+                  </div>
                   <h4 className="font-medium mb-4 text-slate-900 text-lg tracking-wide">{item.label}</h4>
                   <p className="text-slate-600 leading-relaxed">{item.desc}</p>
                 </CardContent>
@@ -439,37 +577,38 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section id="contact" className="py-24 bg-gradient-to-b from-slate-50 to-white">
-        <div className="container mx-auto px-6 max-w-4xl">
-          <div className="text-center mb-20 reveal">
+      {/* Enhanced Contact Section */}
+      <section id="contact" className="py-28 bg-gradient-to-b from-slate-50 to-white">
+        <div className="container mx-auto px-6 max-w-5xl">
+          <div className="text-center mb-24 reveal">
             <h2 className="text-4xl md:text-5xl font-serif font-light mb-6 text-slate-900 tracking-tight">
               {t("Get In Touch", "تواصل معنا")}
             </h2>
+            <div className="section-divider w-32 mx-auto mb-8"></div>
             <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
               {t("Connect with our team to explore Dubai's premier real estate opportunities", "تواصل مع فريقنا لاكتشاف أفضل فرص العقارات في دبي")}
             </p>
           </div>
 
-          <Card className="bg-white border-0 shadow-xl reveal">
+          <Card className="bg-white/80 backdrop-blur-xl border-0 shadow-2xl reveal hover-lift-premium">
             <CardContent className="p-12">
               <form className="space-y-8">
                 <div className="grid md:grid-cols-2 gap-8">
-                  <div>
-                    <label htmlFor="name" className="block text-slate-900 font-medium mb-3 text-base tracking-wide">{t("Name", "الاسم")} *</label>
+                  <div className="space-y-2">
+                    <label htmlFor="name" className="block text-slate-900 font-medium text-base tracking-wide">{t("Name", "الاسم")} *</label>
                     <Input 
                       id="name" 
-                      className="border-slate-200 focus:border-amber-500 focus:ring-amber-500 py-4 text-base rounded-lg transition-colors duration-200" 
+                      className="input-premium" 
                       placeholder={t("Your name", "اسمك")} 
                       required 
                     />
                   </div>
-                  <div>
-                    <label htmlFor="email" className="block text-slate-900 font-medium mb-3 text-base tracking-wide">{t("Email", "البريد الإلكتروني")} *</label>
+                  <div className="space-y-2">
+                    <label htmlFor="email" className="block text-slate-900 font-medium text-base tracking-wide">{t("Email", "البريد الإلكتروني")} *</label>
                     <Input 
                       id="email" 
                       type="email" 
-                      className="border-slate-200 focus:border-amber-500 focus:ring-amber-500 py-4 text-base rounded-lg transition-colors duration-200" 
+                      className="input-premium" 
                       placeholder="your@email.com" 
                       required 
                     />
@@ -477,22 +616,22 @@ const Index = () => {
                 </div>
                 
                 <div className="grid md:grid-cols-2 gap-8">
-                  <div>
-                    <label htmlFor="phone" className="block text-slate-900 font-medium mb-3 text-base tracking-wide">{t("Phone", "رقم الهاتف")}</label>
+                  <div className="space-y-2">
+                    <label htmlFor="phone" className="block text-slate-900 font-medium text-base tracking-wide">{t("Phone", "رقم الهاتف")}</label>
                     <Input 
                       id="phone" 
                       type="tel" 
-                      className="border-slate-200 focus:border-amber-500 focus:ring-amber-500 py-4 text-base rounded-lg transition-colors duration-200" 
+                      className="input-premium" 
                       placeholder="+971 XX XXX XXXX" 
                     />
                   </div>
-                  <div>
-                    <label htmlFor="interest" className="block text-slate-900 font-medium mb-3 text-base tracking-wide">{t("Interest", "الاهتمام")}</label>
+                  <div className="space-y-2">
+                    <label htmlFor="interest" className="block text-slate-900 font-medium text-base tracking-wide">{t("Interest", "الاهتمام")}</label>
                     <Select>
-                      <SelectTrigger className="border-slate-200 py-4 rounded-lg">
+                      <SelectTrigger className="input-premium">
                         <SelectValue placeholder={t("Select your interest", "اختر اهتمامك")} />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-white/95 backdrop-blur-xl">
                         <SelectItem value="buy">{t("Buying Property", "شراء عقار")}</SelectItem>
                         <SelectItem value="invest">{t("Investment Opportunities", "فرص استثمارية")}</SelectItem>
                         <SelectItem value="sell">{t("Selling Property", "بيع عقار")}</SelectItem>
@@ -502,36 +641,41 @@ const Index = () => {
                   </div>
                 </div>
                 
-                <div>
-                  <label htmlFor="message" className="block text-slate-900 font-medium mb-3 text-base tracking-wide">{t("Message", "رسالة")}</label>
+                <div className="space-y-2">
+                  <label htmlFor="message" className="block text-slate-900 font-medium text-base tracking-wide">{t("Message", "رسالة")}</label>
                   <Textarea 
                     id="message" 
-                    className="border-slate-200 focus:border-amber-500 focus:ring-amber-500 min-h-36 text-base rounded-lg transition-colors duration-200" 
+                    className="input-premium min-h-36" 
                     placeholder={t("Tell us about your requirements...", "أخبرنا عن متطلباتك...")} 
                   />
                 </div>
                 
                 <Button 
                   type="submit" 
-                  className="w-full bg-slate-900 hover:bg-slate-800 text-white py-5 text-base font-medium tracking-wide rounded-full transition-all duration-300 hover:scale-105"
+                  className="w-full btn-premium group"
                 >
+                  <Phone className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-300" />
                   {t("Send Message", "إرسال الرسالة")}
                 </Button>
               </form>
 
               <div className="mt-12 pt-8 border-t border-slate-100 text-center">
-                <p className="text-slate-600 mb-4 text-base">
+                <p className="text-slate-600 mb-6 text-base">
                   {t("Prefer to call? Speak with our team directly", "تفضل الاتصال؟ تحدث مباشرة مع فريقنا")}
                 </p>
-                <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                   <a 
                     href="tel:+971-4-XXX-XXXX" 
-                    className="text-slate-900 font-medium hover:text-amber-600 transition-colors duration-200 text-lg"
+                    className="text-slate-900 font-semibold hover:text-amber-600 transition-colors duration-300 text-lg group flex items-center"
                   >
+                    <Phone className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" />
                     +971 4 XXX XXXX
                   </a>
                   <span className="hidden sm:inline text-slate-300">|</span>
-                  <span className="text-slate-600">{t("Available 9 AM - 6 PM GST", "متاح من 9 صباحًا إلى 6 مساءً بتوقيت الخليج")}</span>
+                  <span className="text-slate-600 flex items-center">
+                    <Calendar className="w-4 h-4 mr-2" />
+                    {t("Available 9 AM - 6 PM GST", "متاح من 9 صباحًا إلى 6 مساءً بتوقيت الخليج")}
+                  </span>
                 </div>
               </div>
             </CardContent>
@@ -539,13 +683,15 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-20 bg-slate-900 text-white">
+      {/* Enhanced Footer */}
+      <footer className="py-24 bg-gradient-to-b from-slate-900 to-slate-800 text-white">
         <div className="container mx-auto px-6 max-w-7xl">
-          <div className="grid md:grid-cols-4 gap-12 mb-12">
+          <div className="grid md:grid-cols-4 gap-12 mb-16">
             <div className="md:col-span-2">
-              <h3 className="text-3xl font-serif font-light mb-6 tracking-tight">Moonscape</h3>
-              <p className="text-white/80 mb-8 leading-relaxed text-lg">
+              <h3 className="text-3xl font-serif font-light mb-6 tracking-tight">
+                <span className="text-gradient-gold">Moon</span>scape
+              </h3>
+              <p className="text-white/80 mb-8 leading-relaxed text-lg max-w-md">
                 {t("Your gateway to Dubai's most prestigious properties and investment opportunities.", "بوابتك إلى أرقى العقارات وفرص الاستثمار في دبي.")}
               </p>
               <div className="flex space-x-4">
@@ -556,7 +702,7 @@ const Index = () => {
                   <a 
                     key={social.label} 
                     href={social.href} 
-                    className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 transition-all duration-300 hover:scale-110"
+                    className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 transition-all duration-300 hover:scale-110 hover-glow"
                   >
                     <social.icon className="w-5 h-5" />
                   </a>
@@ -567,9 +713,18 @@ const Index = () => {
             <div>
               <h4 className="font-medium text-white mb-6 text-lg tracking-wide">{t("Properties", "العقارات")}</h4>
               <ul className="space-y-4 text-white/70">
-                {["Apartments", "Villas", "Penthouses", "Commercial", "Off-Plan", "Investment"].map((item) => (
-                  <li key={item}>
-                    <a href="#" className="hover:text-white transition-colors duration-200 hover:translate-x-1 inline-block">{t(item, "—")}</a>
+                {[
+                  { en: "Apartments", ar: "شقق" },
+                  { en: "Villas", ar: "فيلل" },
+                  { en: "Penthouses", ar: "بنتهاوس" },
+                  { en: "Commercial", ar: "تجاري" },
+                  { en: "Off-Plan", ar: "على الخارطة" },
+                  { en: "Investment", ar: "استثمار" }
+                ].map((item, index) => (
+                  <li key={index}>
+                    <a href="#" className="hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block nav-link-premium">
+                      {t(item.en, item.ar)}
+                    </a>
                   </li>
                 ))}
               </ul>
@@ -578,23 +733,43 @@ const Index = () => {
             <div>
               <h4 className="font-medium text-white mb-6 text-lg tracking-wide">{t("Company", "الشركة")}</h4>
               <ul className="space-y-4 text-white/70">
-                {["About Us", "Our Team", "Careers", "News", "Contact", "Legal"].map((item) => (
-                  <li key={item}>
-                    <a href="#" className="hover:text-white transition-colors duration-200 hover:translate-x-1 inline-block">{t(item, "—")}</a>
+                {[
+                  { en: "About Us", ar: "من نحن" },
+                  { en: "Our Team", ar: "فريقنا" },
+                  { en: "Careers", ar: "الوظائف" },
+                  { en: "News", ar: "الأخبار" },
+                  { en: "Contact", ar: "اتصل بنا" },
+                  { en: "Legal", ar: "قانوني" }
+                ].map((item, index) => (
+                  <li key={index}>
+                    <a href="#" className="hover:text-white transition-colors duration-300 hover:translate-x-1 inline-block nav-link-premium">
+                      {t(item.en, item.ar)}
+                    </a>
                   </li>
                 ))}
               </ul>
             </div>
           </div>
           
-          <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/20">
+          <div className="section-divider opacity-20 mb-8"></div>
+          
+          <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-4 md:mb-0 text-white/60">
               <p className="text-base">© 2024 Moonscape Real Estate. {t("All rights reserved.", "جميع الحقوق محفوظة.")}</p>
-              <p className="text-sm text-white/50 mt-1">{t("RERA Licensed | Dubai, United Arab Emirates", "مرخص من RERA | دبي، الإمارات العربية المتحدة")}</p>
+              <p className="text-sm text-white/50 mt-1 flex items-center">
+                <Shield className="w-4 h-4 mr-2" />
+                {t("RERA Licensed | Dubai, United Arab Emirates", "مرخص من RERA | دبي، الإمارات العربية المتحدة")}
+              </p>
             </div>
             <div className="flex gap-8">
-              {["Privacy", "Terms", "Cookies"].map((link) => (
-                <a key={link} href="#" className="text-white/60 hover:text-white transition-colors duration-200">{t(link, "—")}</a>
+              {[
+                { en: "Privacy", ar: "الخصوصية" },
+                { en: "Terms", ar: "الشروط" },
+                { en: "Cookies", ar: "ملفات تعريف الارتباط" }
+              ].map((link, index) => (
+                <a key={index} href="#" className="text-white/60 hover:text-white transition-colors duration-300 nav-link-premium">
+                  {t(link.en, link.ar)}
+                </a>
               ))}
             </div>
           </div>
