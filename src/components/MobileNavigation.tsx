@@ -29,10 +29,15 @@ export const MobileNavigation = ({
     setIsOpen(false);
   };
 
-  // Handle swipe gestures
+  // Handle swipe gestures with haptic feedback
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
+    
+    // Haptic feedback simulation
+    if (navigator.vibrate) {
+      navigator.vibrate(10);
+    }
   };
 
   const onTouchMove = (e: React.TouchEvent) => {
@@ -48,8 +53,10 @@ export const MobileNavigation = ({
 
     if (lang === "en" && isLeftSwipe) {
       setIsOpen(false);
+      if (navigator.vibrate) navigator.vibrate(20);
     } else if (lang === "ar" && isRightSwipe) {
       setIsOpen(false);
+      if (navigator.vibrate) navigator.vibrate(20);
     }
   };
 
@@ -72,7 +79,7 @@ export const MobileNavigation = ({
         variant="ghost"
         size="sm"
         onClick={toggleMenu}
-        className="md:hidden p-3 hover:bg-slate-100/80 transition-all duration-300 hover:scale-105 active:scale-95"
+        className="md:hidden p-3 hover:bg-slate-100/80 transition-all duration-300 hover:scale-105 active:scale-95 min-h-[44px] min-w-[44px]"
         aria-label="Toggle menu"
       >
         <Menu className="w-6 h-6" />
@@ -89,7 +96,7 @@ export const MobileNavigation = ({
           
           {/* Slide-in menu with improved animations */}
           <div 
-            className={`fixed top-0 ${lang === "ar" ? "left-0" : "right-0"} h-full w-80 max-w-[85vw] bg-white/95 backdrop-blur-xl shadow-2xl border-l border-slate-200/50 transform transition-all duration-500 ease-out z-50 md:hidden`}
+            className={`fixed top-0 ${lang === "ar" ? "left-0" : "right-0"} h-full w-80 max-w-[85vw] bg-white/95 backdrop-blur-xl shadow-2xl border-l border-slate-200/50 transform transition-all duration-500 ease-out z-50 md:hidden animate-slide-in`}
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
@@ -103,7 +110,7 @@ export const MobileNavigation = ({
                 variant="ghost" 
                 size="sm" 
                 onClick={toggleMenu}
-                className="p-2 hover:bg-slate-100/80 rounded-full transition-all duration-300 hover:scale-110 active:scale-95"
+                className="p-2 hover:bg-slate-100/80 rounded-full transition-all duration-300 hover:scale-110 active:scale-95 min-h-[44px] min-w-[44px]"
                 aria-label="Close menu"
               >
                 <X className="w-5 h-5" />
@@ -119,7 +126,6 @@ export const MobileNavigation = ({
                   className="group flex items-center justify-between w-full text-left text-lg text-slate-700 hover:text-slate-900 font-medium py-4 px-4 rounded-xl hover:bg-gradient-to-r hover:from-slate-50 hover:to-slate-100 transition-all duration-300 transform hover:translate-x-1 active:scale-98 min-h-[56px]"
                   style={{ 
                     animationDelay: `${index * 0.1}s`,
-                    animation: 'slideInFromRight 0.5s ease-out forwards'
                   }}
                 >
                   <span>{item.label}</span>
@@ -145,19 +151,6 @@ export const MobileNavigation = ({
           </div>
         </>
       )}
-
-      <style jsx>{`
-        @keyframes slideInFromRight {
-          from {
-            opacity: 0;
-            transform: translateX(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-      `}</style>
     </>
   );
 };
